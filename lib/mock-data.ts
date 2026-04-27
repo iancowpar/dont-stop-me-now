@@ -155,7 +155,7 @@ export const employees: Employee[] = [
     blinkSessionActive: true,
     riskLevel: 'high',
     timeToAccess: 1.8,
-    notes: 'TERMINATED Apr 24. Active Blink session persists 3 days later. Workday did not emit deprovisioning SCIM event. Payroll and schedule data accessible.',
+    notes: 'TERMINATED Apr 24. Nightly reconciliation job detected Apr 27: Workday shows status inactive, Blink session still active. SCIM deprovision event was sent but failed to process (504 timeout in SCIM handler at 17:31). Payroll and schedule data accessible.',
   },
   {
     id: 'e006',
@@ -243,7 +243,7 @@ export const employees: Employee[] = [
     blinkSessionActive: true,
     riskLevel: 'high',
     timeToAccess: 2.7,
-    notes: 'TERMINATED Apr 25. Active session persists. Patient schedule and admin data accessible via deep links. HIPAA compliance risk.',
+    notes: 'TERMINATED Apr 25. Nightly reconciliation job detected Apr 27: Workday shows status inactive, Blink session still active. No SCIM deprovision event received — delivery failure suspected. Patient schedule and admin data accessible. HIPAA compliance risk.',
   },
 
   // ── Target Corp employees ──────────────────────────────────────────────────
@@ -300,31 +300,31 @@ export const securityAlerts: SecurityAlert[] = [
     id: 'sa001',
     severity: 'high',
     type: 'deprovisioning_lag',
-    title: 'Terminated employee session active — 3 days',
+    title: 'Reconciliation drift detected — terminated employee session active',
     message:
-      'Linda Zhou (Walmart Distribution) was terminated Apr 24. Her Blink session remains active. Workday did not emit a SCIM deprovisioning event. Payroll and schedule data are still accessible via deep links.',
+      'Nightly reconciliation job flagged Linda Zhou (Walmart Distribution): Workday employment status is inactive as of Apr 24, but her Blink session remains active 3 days later. Root cause: SCIM deprovision event was sent but failed with a 504 timeout in the handler at 17:31. Payroll and schedule data still accessible.',
     affectedEmployeeIds: ['e005'],
     customerId: 'walmart',
     customerName: 'Walmart Distribution',
     timestamp: '2026-04-24T17:30:00',
     actionRequired: true,
     remediation:
-      'Force-revoke session immediately. File incident to investigate why Workday did not fire the deprovision event. Audit last 72h of data access.',
+      'Force-revoke session immediately. Re-process the failed SCIM deprovision event or trigger manual deprovision. Audit 72h of post-termination data access. Investigate SCIM handler 504 — may indicate queue saturation.',
   },
   {
     id: 'sa002',
     severity: 'high',
     type: 'deprovisioning_lag',
-    title: 'Terminated employee session active — HIPAA risk',
+    title: 'Reconciliation drift detected — terminated employee, HIPAA risk',
     message:
-      'Casey Morgan (HCA Healthcare) was terminated Apr 25. Active Blink session detected 2 days later. Patient scheduling and admin records accessible. This is a potential HIPAA violation.',
+      'Nightly reconciliation job flagged Casey Morgan (HCA Healthcare): Workday employment status is inactive as of Apr 25, but Blink session remains active 2 days later. No SCIM deprovision event received — likely a delivery failure. Patient scheduling and admin records remain accessible. Potential HIPAA violation.',
     affectedEmployeeIds: ['e009'],
     customerId: 'hca',
     customerName: 'HCA Healthcare',
     timestamp: '2026-04-25T09:15:00',
     actionRequired: true,
     remediation:
-      'Immediate session revocation. Pull full audit log of post-termination access. Notify compliance team. Verify Workday–SCIM deprovision event delivery.',
+      'Immediate session revocation. Pull full audit log of post-termination data access. Notify HCA compliance team. Investigate SCIM delivery failure and replay deprovision event.',
   },
   {
     id: 'sa003',
