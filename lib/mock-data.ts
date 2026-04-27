@@ -155,7 +155,7 @@ export const employees: Employee[] = [
     blinkSessionActive: true,
     riskLevel: 'high',
     timeToAccess: 1.8,
-    notes: 'TERMINATED Apr 24. Nightly reconciliation job detected Apr 27: Workday shows status inactive, Blink session still active. SCIM deprovision event was sent but failed to process (504 timeout in SCIM handler at 17:31). Payroll and schedule data accessible.',
+    notes: 'TERMINATED Apr 24. Workday sent SCIM deprovision event at 17:31 — failed to process (504 timeout in SCIM handler). Session remains active. Payroll and schedule data accessible.',
   },
   {
     id: 'e006',
@@ -243,7 +243,7 @@ export const employees: Employee[] = [
     blinkSessionActive: true,
     riskLevel: 'high',
     timeToAccess: 2.7,
-    notes: 'TERMINATED Apr 25. Nightly reconciliation job detected Apr 27: Workday shows status inactive, Blink session still active. No SCIM deprovision event received — delivery failure suspected. Patient schedule and admin data accessible. HIPAA compliance risk.',
+    notes: 'TERMINATED Apr 25. Workday sent SCIM deprovision event at 09:12 — failed to process (malformed payload, missing required attribute). Session remains active. Patient schedule and admin data accessible. HIPAA compliance risk.',
   },
 
   // ── Target Corp employees ──────────────────────────────────────────────────
@@ -300,31 +300,31 @@ export const securityAlerts: SecurityAlert[] = [
     id: 'sa001',
     severity: 'high',
     type: 'deprovisioning_lag',
-    title: 'Reconciliation drift detected — terminated employee session active',
+    title: 'SCIM deprovision failed — terminated employee session active',
     message:
-      'Nightly reconciliation job flagged Linda Zhou (Walmart Distribution): Workday employment status is inactive as of Apr 24, but her Blink session remains active 3 days later. Root cause: SCIM deprovision event was sent but failed with a 504 timeout in the handler at 17:31. Payroll and schedule data still accessible.',
+      'Linda Zhou (Walmart Distribution) was terminated Apr 24. Workday sent a SCIM deprovision event at 17:31 but it failed to process — 504 timeout in the SCIM handler. The event was never retried. Her Blink session has remained active for 3 days. Payroll and schedule data still accessible.',
     affectedEmployeeIds: ['e005'],
     customerId: 'walmart',
     customerName: 'Walmart Distribution',
     timestamp: '2026-04-24T17:30:00',
     actionRequired: true,
     remediation:
-      'Force-revoke session immediately. Re-process the failed SCIM deprovision event or trigger manual deprovision. Audit 72h of post-termination data access. Investigate SCIM handler 504 — may indicate queue saturation.',
+      'Force-revoke session immediately. Replay the failed SCIM deprovision event or trigger manual deprovision. Audit 72h of post-termination data access. Investigate SCIM handler 504 — likely queue saturation given elevated load this morning.',
   },
   {
     id: 'sa002',
     severity: 'high',
     type: 'deprovisioning_lag',
-    title: 'Reconciliation drift detected — terminated employee, HIPAA risk',
+    title: 'SCIM deprovision failed — terminated employee, HIPAA risk',
     message:
-      'Nightly reconciliation job flagged Casey Morgan (HCA Healthcare): Workday employment status is inactive as of Apr 25, but Blink session remains active 2 days later. No SCIM deprovision event received — likely a delivery failure. Patient scheduling and admin records remain accessible. Potential HIPAA violation.',
+      'Casey Morgan (HCA Healthcare) was terminated Apr 25. Workday sent a SCIM deprovision event at 09:12 but it failed to process — malformed payload, missing required attribute. The event was not retried. Blink session remains active 2 days later. Patient scheduling and admin records accessible. Potential HIPAA violation.',
     affectedEmployeeIds: ['e009'],
     customerId: 'hca',
     customerName: 'HCA Healthcare',
     timestamp: '2026-04-25T09:15:00',
     actionRequired: true,
     remediation:
-      'Immediate session revocation. Pull full audit log of post-termination data access. Notify HCA compliance team. Investigate SCIM delivery failure and replay deprovision event.',
+      'Force-revoke session immediately. Replay the failed SCIM deprovision event. Pull full post-termination access audit log and notify HCA compliance team. Fix malformed payload — likely a Workday field mapping issue introduced in a recent config change.',
   },
   {
     id: 'sa003',
