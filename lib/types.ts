@@ -81,3 +81,38 @@ export type Customer = {
   integrationHealth: number
   csm: string
 }
+
+export type AuditEntry = {
+  id: string
+  timestamp: string
+  action: string
+  target: string
+  customerId: string
+  customerName: string
+  actor: string
+  result: 'success' | 'failure'
+  details?: string
+}
+
+export type ToastMessage = {
+  id: string
+  message: string
+  type: 'success' | 'error' | 'info'
+}
+
+export type ConfirmConfig = {
+  title: string
+  message: string
+  confirmLabel: string
+  severity: 'danger' | 'warning'
+  onConfirm: () => void
+}
+
+export type ActionHandlers = {
+  revokeSession: (employeeId: string) => void
+  retryProvision: (employeeId: string) => void
+  sendVerificationSms: (employeeId: string) => void
+  resolveAlert: (alertId: string) => void
+  dismissAlert: (alertId: string) => void
+  loadingActions: Record<string, string>
+}

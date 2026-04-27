@@ -9,8 +9,9 @@ import {
   AlertOctagon,
   AlertTriangle,
   Info,
+  Loader2,
 } from 'lucide-react'
-import type { SecurityAlert, AlertSeverity, AlertType } from '@/lib/types'
+import type { SecurityAlert, AlertSeverity, AlertType, ActionHandlers } from '@/lib/types'
 
 const SEVERITY_CONFIG: Record<
   AlertSeverity,
@@ -60,8 +61,9 @@ function formatTimestamp(ts: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-function AlertCard({ alert }: { alert: SecurityAlert }) {
+function AlertCard({ alert, handlers }: { alert: SecurityAlert; handlers: ActionHandlers }) {
   const sev = SEVERITY_CONFIG[alert.severity]
+  const isLoading = !!handlers.loadingActions[alert.id]
   return (
     <div
       className={`rounded-xl border border-slate-200 border-l-4 ${sev.border} ${sev.bg} p-5 shadow-sm`}
@@ -114,18 +116,32 @@ function AlertCard({ alert }: { alert: SecurityAlert }) {
           {alert.actionRequired && (
             <div className="flex gap-2 mt-3">
               <button
-                className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors shadow-sm ${
+                onClick={() => {
+                  if (alert.type === 'deprovisioning_lag' && alert.affectedEmployeeIds[0]) {
+                    handlers.revokeSession(alert.affectedEmployeeIds[0])
+                  } else {
+                    handlers.resolveAlert(alert.id)
+                  }
+                }}
+                disabled={isLoading}
+                className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-colors shadow-sm flex items-center gap-1.5 disabled:opacity-60 ${
                   alert.severity === 'high'
                     ? 'bg-red-600 hover:bg-red-700 text-white'
                     : 'bg-amber-500 hover:bg-amber-600 text-white'
                 }`}
               >
-                {alert.type === 'deprovisioning_lag' ? 'Revoke Session' : 'Take Action'}
+                {isLoading && <Loader2 className="w-3 h-3 animate-spin" />}
+                {alert.type === 'deprovisioning_lag'
+                  ? (isLoading ? 'Revoking…' : 'Revoke Session')
+                  : (isLoading ? 'Resolving…' : 'Take Action')}
               </button>
               <button className="px-3.5 py-1.5 text-xs font-medium bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors">
                 View Details
               </button>
-              <button className="px-3.5 py-1.5 text-xs font-medium bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors">
+              <button
+                onClick={() => handlers.dismissAlert(alert.id)}
+                className="px-3.5 py-1.5 text-xs font-medium bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors"
+              >
                 Dismiss
               </button>
             </div>
@@ -136,7 +152,7 @@ function AlertCard({ alert }: { alert: SecurityAlert }) {
   )
 }
 
-export default function SecurityGuardrails({ alerts }: { alerts: SecurityAlert[] }) {
+export default function SecurityGuardrails({ alerts, handlers }: { alerts: SecurityAlert[]; handlers: ActionHandlers }) {
   const highCount = alerts.filter((a) => a.severity === 'high').length
   const medCount = alerts.filter((a) => a.severity === 'medium').length
   const lowCount = alerts.filter((a) => a.severity === 'low').length
@@ -202,7 +218,7 @@ export default function SecurityGuardrails({ alerts }: { alerts: SecurityAlert[]
       {/* Alert cards */}
       <div className="space-y-3">
         {sorted.map((alert) => (
-          <AlertCard key={alert.id} alert={alert} />
+          <AlertCard key={alert.id} alert={alert} handlers={handlers} />
         ))}
       </div>
 

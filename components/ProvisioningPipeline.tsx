@@ -13,7 +13,7 @@ import {
   Clock,
   Loader2,
 } from 'lucide-react'
-import type { Employee, ProvisioningStatus } from '@/lib/types'
+import type { Employee, ProvisioningStatus, ActionHandlers } from '@/lib/types'
 
 // ── Pipeline stage dot ────────────────────────────────────────────────────────
 
@@ -94,9 +94,10 @@ function matchesFilter(emp: Employee, f: Filter): boolean {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export default function ProvisioningPipeline({ employees }: { employees: Employee[] }) {
+export default function ProvisioningPipeline({ employees, handlers }: { employees: Employee[]; handlers: ActionHandlers }) {
   const [filter, setFilter] = useState<Filter>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const { revokeSession, retryProvision, sendVerificationSms, loadingActions } = handlers
 
   const filterDefs: { id: Filter; label: string }[] = [
     { id: 'all', label: 'All' },
@@ -274,19 +275,35 @@ export default function ProvisioningPipeline({ employees }: { employees: Employe
                   {/* Action buttons */}
                   {(emp.riskLevel === 'high' || emp.riskLevel === 'medium' || emp.status === 'pending') && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {emp.riskLevel === 'high' && (
-                        <button className="px-3.5 py-1.5 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors shadow-sm">
-                          Revoke Session Now
+                      {emp.riskLevel === 'high' && emp.blinkSessionActive && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); revokeSession(emp.id) }}
+                          disabled={!!loadingActions[emp.id]}
+                          className="px-3.5 py-1.5 text-xs font-semibold bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white rounded-lg transition-colors shadow-sm flex items-center gap-1.5"
+                        >
+                          {loadingActions[emp.id] === 'revoking' ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+                          {loadingActions[emp.id] === 'revoking' ? 'Revoking…' : 'Revoke Session Now'}
                         </button>
                       )}
                       {emp.status === 'pending' && (
                         <>
-                          <button className="px-3.5 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm flex items-center gap-1.5">
-                            <RefreshCw className="w-3 h-3" />
-                            Retry Provision
+                          <button
+                            onClick={(e) => { e.stopPropagation(); retryProvision(emp.id) }}
+                            disabled={!!loadingActions[emp.id]}
+                            className="px-3.5 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white rounded-lg transition-colors shadow-sm flex items-center gap-1.5"
+                          >
+                            {loadingActions[emp.id] === 'retrying'
+                              ? <Loader2 className="w-3 h-3 animate-spin" />
+                              : <RefreshCw className="w-3 h-3" />}
+                            {loadingActions[emp.id] === 'retrying' ? 'Retrying…' : 'Retry Provision'}
                           </button>
-                          <button className="px-3.5 py-1.5 text-xs font-medium bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg transition-colors">
-                            Send Verification SMS
+                          <button
+                            onClick={(e) => { e.stopPropagation(); sendVerificationSms(emp.id) }}
+                            disabled={!!loadingActions[emp.id]}
+                            className="px-3.5 py-1.5 text-xs font-medium bg-white hover:bg-slate-50 disabled:opacity-60 border border-slate-200 text-slate-700 rounded-lg transition-colors flex items-center gap-1.5"
+                          >
+                            {loadingActions[emp.id] === 'sms' ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+                            {loadingActions[emp.id] === 'sms' ? 'Sending…' : 'Send Verification SMS'}
                           </button>
                         </>
                       )}
