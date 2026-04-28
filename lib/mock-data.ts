@@ -1,0 +1,577 @@
+import type { Customer, Employee, SecurityAlert, Metrics } from './types'
+
+export const customers: Customer[] = [
+  {
+    id: 'walmart',
+    name: 'Walmart Distribution',
+    industry: 'Retail',
+    employeeCount: 5200,
+    scimTokenExpiry: '2026-07-15',
+    integrationHealth: 91,
+    csm: 'Jake Torres',
+  },
+  {
+    id: 'hca',
+    name: 'HCA Healthcare',
+    industry: 'Healthcare',
+    employeeCount: 1800,
+    scimTokenExpiry: '2026-06-30',
+    integrationHealth: 68,
+    csm: 'Priya Mehta',
+  },
+  {
+    id: 'target',
+    name: 'Target Corp',
+    industry: 'Retail',
+    employeeCount: 3100,
+    scimTokenExpiry: '2026-05-05',
+    integrationHealth: 88,
+    csm: 'Jake Torres',
+  },
+]
+
+const STAGE_NAMES = ['Workday Record', 'SCIM Event', 'Blink Account', 'Identity Verified', 'Apps Connected']
+
+type StageStatus = 'success' | 'failed' | 'pending' | 'warning' | 'idle'
+
+function pipeline(
+  statuses: StageStatus[],
+  details: (string | undefined)[] = []
+): Employee['pipeline'] {
+  return STAGE_NAMES.map((name, i) => ({
+    name,
+    status: statuses[i] ?? 'idle',
+    detail: details[i],
+  }))
+}
+
+export const employees: Employee[] = [
+  // ── Walmart employees ──────────────────────────────────────────────────────
+  {
+    id: 'e001',
+    name: 'Sarah Chen',
+    department: 'Warehouse Operations',
+    hireDate: '2026-04-27',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'email',
+    identity: 's.chen.personal@gmail.com',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'warning', 'idle'],
+      [
+        'Record created 06:02 AM',
+        'SCIM event fired 06:07 AM',
+        'Account created 06:08 AM',
+        'Verification email sent — unopened after 3h 14m',
+        undefined,
+      ]
+    ),
+    status: 'pending',
+    riskLevel: 'medium',
+    notes: 'Day-1 hire blocked at identity verification. Verification email unopened. Consider SMS fallback trigger.',
+  },
+  {
+    id: 'e002',
+    name: 'James Park',
+    department: 'Logistics',
+    hireDate: '2026-04-26',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'phone',
+    identity: '+1 (555) 203-4471',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'success'],
+      [
+        'Record created 08:15 AM',
+        'SCIM event fired 08:19 AM',
+        'Account created 08:21 AM',
+        'Phone verified via OTP 10:24 AM',
+        'All 5 apps connected 10:31 AM',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'none',
+    timeToAccess: 2.3,
+  },
+  {
+    id: 'e003',
+    name: 'Maria Santos',
+    department: 'Inventory',
+    hireDate: '2026-04-27',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'phone',
+    identity: '+1 (555) 847-2910',
+    pipeline: pipeline(
+      ['success', 'success', 'pending', 'idle', 'idle'],
+      [
+        'Record created 07:55 AM',
+        'SCIM event fired 08:01 AM',
+        'Account creation in progress (45m elapsed)',
+        undefined,
+        undefined,
+      ]
+    ),
+    status: 'pending',
+    riskLevel: 'low',
+    notes: 'Account creation delayed — SCIM handler queue at 94% capacity. Auto-scaling triggered.',
+  },
+  {
+    id: 'e004',
+    name: 'David Kim',
+    department: 'HR Operations',
+    hireDate: '2026-04-25',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'email',
+    identity: 'd.kim.home@outlook.com',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'warning'],
+      [
+        'Record created 09:00 AM',
+        'SCIM event fired 09:04 AM',
+        'Account created 09:06 AM',
+        'Email verified 11:22 AM',
+        'Benefits deep link failing — SSO audience mismatch (401)',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'low',
+    timeToAccess: 2.4,
+    notes: 'Benefits app returning 401 on deep link. SAML audience claim mismatch with benefits provider config.',
+  },
+  {
+    id: 'e005',
+    name: 'Linda Zhou',
+    department: 'Store Management',
+    hireDate: '2026-02-14',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'phone',
+    identity: '+1 (555) 614-9902',
+    pipeline: pipeline(['success', 'success', 'success', 'success', 'success']),
+    status: 'terminated',
+    terminatedDate: '2026-04-24',
+    blinkSessionActive: true,
+    downstreamSessionsCleared: false,
+    riskLevel: 'high',
+    timeToAccess: 1.8,
+    notes: 'TERMINATED Apr 24. Workday sent SCIM deprovision event at 17:31 — failed to process (504 timeout in SCIM handler). Session remains active. Payroll and schedule data accessible.',
+  },
+  {
+    id: 'e006',
+    name: 'Antonio Rivera',
+    department: 'Supply Chain',
+    hireDate: '2026-04-23',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'phone',
+    identity: '+1 (555) 330-7751',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'success'],
+      [
+        'Record created 07:30 AM',
+        'SCIM event fired 07:34 AM',
+        'Account created 07:36 AM',
+        'Phone verified 10:41 AM',
+        'All 5 apps connected 10:47 AM',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'none',
+    timeToAccess: 3.3,
+  },
+
+  // ── HCA Healthcare employees ───────────────────────────────────────────────
+  {
+    id: 'e007',
+    name: 'Dr. Patricia Wu',
+    department: 'Emergency Medicine',
+    hireDate: '2026-04-26',
+    customerId: 'hca',
+    customerName: 'HCA Healthcare',
+    identityType: 'email',
+    identity: 'p.wu.md@gmail.com',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'success'],
+      [
+        'Record created 08:00 AM',
+        'SCIM event fired 08:03 AM',
+        'Account created 08:05 AM',
+        'Email verified 09:54 AM',
+        'All 5 apps connected 09:58 AM',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'none',
+    timeToAccess: 1.9,
+  },
+  {
+    id: 'e008',
+    name: 'Robert Nguyen',
+    department: 'Nursing — ICU',
+    hireDate: '2026-04-27',
+    customerId: 'hca',
+    customerName: 'HCA Healthcare',
+    identityType: 'phone',
+    identity: 'Unverified (+1 (555) 702-8814)',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'warning', 'idle'],
+      [
+        'Record created 07:00 AM',
+        'SCIM event fired 07:04 AM',
+        'Account created 07:06 AM',
+        'OTP not delivered — possible VOIP number, 4h elapsed',
+        undefined,
+      ]
+    ),
+    status: 'pending',
+    riskLevel: 'medium',
+    notes: 'OTP undeliverable. Likely VOIP number. Recommend email fallback or manual identity verification.',
+  },
+  {
+    id: 'e009',
+    name: 'Casey Morgan',
+    department: 'Clinical Administration',
+    hireDate: '2026-04-14',
+    customerId: 'hca',
+    customerName: 'HCA Healthcare',
+    identityType: 'email',
+    identity: 'c.morgan@hotmail.com',
+    pipeline: pipeline(['success', 'success', 'success', 'success', 'success']),
+    status: 'terminated',
+    terminatedDate: '2026-04-25',
+    blinkSessionActive: true,
+    downstreamSessionsCleared: false,
+    riskLevel: 'high',
+    timeToAccess: 2.7,
+    notes: 'TERMINATED Apr 25. Workday sent SCIM deprovision event at 09:12 — failed to process (malformed payload, missing required attribute). HCA is on hourly scheduled polling, not RTS — the failed event has not been retried across 48+ polling cycles. Session remains active. Deep links to patient scheduling, medication administration records, and clinical staff directory remain accessible. HIPAA Security Rule §164.308(a)(3)(ii)(C) requires covered entities to terminate access when employment ends.',
+  },
+
+  // ── Target Corp employees ──────────────────────────────────────────────────
+  {
+    id: 'e010',
+    name: 'Olivia Brennan',
+    department: 'Floor Operations',
+    hireDate: '2026-04-27',
+    customerId: 'target',
+    customerName: 'Target Corp',
+    identityType: 'email',
+    identity: 'o.brennan@yahoo.com',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'success'],
+      [
+        'Record created 06:45 AM',
+        'SCIM event fired 06:49 AM',
+        'Account created 06:51 AM',
+        'Email verified 08:46 AM',
+        'All 5 apps connected 08:50 AM',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'none',
+    timeToAccess: 2.1,
+  },
+  {
+    id: 'e011',
+    name: 'Marcus Webb',
+    department: 'Fulfillment',
+    hireDate: '2026-04-26',
+    customerId: 'target',
+    customerName: 'Target Corp',
+    identityType: 'phone',
+    identity: '+1 (555) 481-3329',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'success'],
+      [
+        'Record created 09:10 AM',
+        'SCIM event fired 09:14 AM',
+        'Account created 09:15 AM',
+        'Phone verified 11:06 AM',
+        'All 5 apps connected 11:11 AM',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'none',
+    timeToAccess: 2.0,
+  },
+
+  // ── Edge case: phone number recycling risk ─────────────────────────────────
+  {
+    id: 'e012',
+    name: 'Ray Kowalski',
+    department: 'Distribution',
+    hireDate: '2025-09-03',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'phone',
+    identity: '+1 (555) 291-4477',
+    pipeline: pipeline(['success', 'success', 'success', 'success', 'success']),
+    status: 'terminated',
+    terminatedDate: '2026-01-15',
+    blinkSessionActive: false,
+    downstreamSessionsCleared: true,
+    riskLevel: 'medium',
+    timeToAccess: 1.6,
+    notes: 'TERMINATED Jan 15 (102 days ago). Blink session deprovisioned at time of termination. However, mobile number +1 (555) 291-4477 remains registered as the SSO identity in Blink. Carriers typically recycle numbers after 90 days of inactivity — this number may now belong to a different person who could trigger account recovery flows.',
+  },
+
+  // ── Edge case: pre-start access ────────────────────────────────────────────
+  {
+    id: 'e013',
+    name: 'Marcus Lee',
+    department: 'Fulfillment',
+    hireDate: '2026-05-05',
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    identityType: 'email',
+    identity: 'm.lee.personal@gmail.com',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'success'],
+      [
+        'Record created Apr 22',
+        'SCIM event fired Apr 22',
+        'Account created Apr 22',
+        'Email verified Apr 23',
+        'Schedule and Paystub apps connected Apr 23',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'medium',
+    timeToAccess: 1.8,
+    notes: 'Hire date May 5 (8 days away). Account fully provisioned and verified. Employee has active access to Schedule and Paystub apps before employment formally begins. Background check status: pending.',
+  },
+  {
+    id: 'e014',
+    name: 'Jennifer Walsh',
+    department: 'Nursing — Oncology',
+    hireDate: '2026-05-12',
+    customerId: 'hca',
+    customerName: 'HCA Healthcare',
+    identityType: 'phone',
+    identity: '+1 (555) 183-6620',
+    pipeline: pipeline(
+      ['success', 'success', 'success', 'success', 'success'],
+      [
+        'Record created Apr 20',
+        'SCIM event fired Apr 20',
+        'Account created Apr 20',
+        'Phone verified Apr 21',
+        'Patient Records, Schedule, Medication Admin apps connected Apr 21',
+      ]
+    ),
+    status: 'active',
+    riskLevel: 'high',
+    timeToAccess: 2.2,
+    notes: 'Hire date May 12 (15 days away). Account fully provisioned and verified. Active deep links to Patient Records, patient scheduling, and medication administration records — all PHI systems — before employment is formally active. Background check: pending. HIPAA requires workforce members to have access only to PHI they are authorized to use (§164.308(a)(4)).',
+  },
+]
+
+export const securityAlerts: SecurityAlert[] = [
+  {
+    id: 'sa001',
+    severity: 'high',
+    type: 'deprovisioning_lag',
+    title: 'SCIM deprovision failed — terminated employee session active',
+    message:
+      'Linda Zhou (Walmart Distribution) was terminated Apr 24. Workday sent a SCIM deprovision event at 17:31 but it failed to process — 504 timeout in the SCIM handler. The event was never retried. Her Blink session has remained active for 3 days. Payroll and schedule data still accessible.',
+    affectedEmployeeIds: ['e005'],
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    timestamp: '2026-04-24T17:30:00',
+    actionRequired: true,
+    remediation:
+      'Force-revoke session immediately. Replay the failed SCIM deprovision event or trigger manual deprovision. Audit 72h of post-termination data access. Investigate SCIM handler 504 — likely queue saturation given elevated load this morning.',
+  },
+  {
+    id: 'sa002',
+    severity: 'high',
+    type: 'deprovisioning_lag',
+    title: 'SCIM deprovision failed — PHI accessible post-termination (HIPAA §164.308)',
+    message:
+      'Casey Morgan (HCA Healthcare, Clinical Administration) was terminated Apr 25. Workday sent a SCIM deprovision event at 09:12 but it failed — malformed payload, missing required attribute. HCA is on hourly scheduled polling, not Real-Time Sync. The failed event has not been retried across 48+ polling cycles. Active Blink session gives access to patient scheduling, medication administration records, and clinical staff directory. HIPAA Security Rule §164.308(a)(3)(ii)(C) requires covered entities to terminate workforce access when employment ends. If PHI was accessed post-termination, HCA may have a breach notification obligation under §164.400.',
+    affectedEmployeeIds: ['e009'],
+    customerId: 'hca',
+    customerName: 'HCA Healthcare',
+    timestamp: '2026-04-25T09:15:00',
+    actionRequired: true,
+    remediation:
+      'Force-revoke session immediately. Pull full post-termination access audit log — if PHI was accessed, HCA compliance and legal must be notified within 60 days per §164.412. Fix malformed SCIM payload (likely a Workday field mapping regression) and replay deprovision event. Recommend upgrading HCA to Real-Time Sync for termination events to eliminate the hourly polling gap.',
+  },
+  {
+    id: 'sa003',
+    severity: 'medium',
+    type: 'token_expiry',
+    title: 'SCIM provisioning token expiring in 8 days',
+    message:
+      "Target Corp's SCIM API token expires May 5. 47 new hires are scheduled for next week. If the token lapses before rotation, all new Workday records will fail to provision in Blink.",
+    affectedEmployeeIds: [],
+    customerId: 'target',
+    customerName: 'Target Corp',
+    timestamp: '2026-04-27T08:00:00',
+    actionRequired: true,
+    remediation:
+      "Coordinate with Target IT admin to rotate the SCIM token before May 3 to maintain a buffer. Update token in Blink's integration config.",
+  },
+  {
+    id: 'sa004',
+    severity: 'medium',
+    type: 'identity_unverified',
+    title: '2 employees using unverified phone numbers as SSO',
+    message:
+      'Robert Nguyen and 1 other employee at HCA Healthcare have unverified phone numbers set as their SSO identity. OTP delivery failed — likely VOIP numbers. Accounts were created without completed verification.',
+    affectedEmployeeIds: ['e008'],
+    customerId: 'hca',
+    customerName: 'HCA Healthcare',
+    timestamp: '2026-04-27T06:45:00',
+    actionRequired: true,
+    remediation:
+      'Suspend SSO until re-verified, or trigger email fallback verification. Consider blocking VOIP numbers at identity collection.',
+  },
+  {
+    id: 'sa005',
+    severity: 'low',
+    type: 'deep_link_failure',
+    title: 'Benefits deep link degraded — 8.7% failure rate',
+    message:
+      "Approximately 452 Walmart employees are receiving errors when accessing the Benefits app via Blink deep link. Root cause: SAML audience claim mismatch between Blink's SSO config and the benefits provider.",
+    affectedEmployeeIds: ['e004'],
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    timestamp: '2026-04-26T14:00:00',
+    actionRequired: false,
+    remediation:
+      "Update SAML audience URI in Benefits app SSO configuration to match Blink's issuer claim. Estimated fix time: 2 hours.",
+  },
+  {
+    id: 'sa006',
+    severity: 'low',
+    type: 'provisioning_delay',
+    title: 'SCIM handler queue at 94% — provisioning delays expected',
+    message:
+      "Walmart's SCIM ingest queue is at 94% capacity due to a morning hire surge. Day-1 hires are experiencing 30–60 minute provisioning delays. Auto-scaling has been triggered.",
+    affectedEmployeeIds: ['e003'],
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    timestamp: '2026-04-27T08:30:00',
+    actionRequired: false,
+    remediation: 'Monitor queue depth. Auto-scaling should resolve within 2h. No manual action required unless queue exceeds 99%.',
+  },
+  {
+    id: 'sa007',
+    severity: 'medium',
+    type: 'phone_recycling_risk',
+    title: 'Phone number recycling risk — identity may have changed hands',
+    message:
+      'Ray Kowalski (Walmart Distribution) was terminated Jan 15 (102 days ago). His Blink session was deprovisioned correctly. However, his mobile number +1 (555) 291-4477 remains registered as an SSO identity in Blink. Carriers typically recycle numbers after 90 days of inactivity. If this number has been reassigned to a new customer, that person could trigger Blink account recovery or verification flows and gain access to Kowalski\'s account history.',
+    affectedEmployeeIds: ['e012'],
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    timestamp: '2026-04-27T06:00:00',
+    actionRequired: true,
+    remediation: 'Purge the phone number from the former employee\'s Blink identity record. Consider a policy to scrub mobile identities from deprovisioned accounts after 30 days to stay well inside the carrier recycling window.',
+  },
+  {
+    id: 'sa008',
+    severity: 'medium',
+    type: 'prestart_access',
+    title: 'Pre-hire employee has active app access before start date',
+    message:
+      'Marcus Lee (Walmart Distribution) is in pre-hire status with a start date of May 5. His Blink account was provisioned when Workday created the record on Apr 22, and he verified his identity the following day. He currently has active access to Schedule and Paystub apps. Background check is still pending. Provisioning on record creation rather than start date creates an access window that may violate onboarding policy.',
+    affectedEmployeeIds: ['e013'],
+    customerId: 'walmart',
+    customerName: 'Walmart Distribution',
+    timestamp: '2026-04-27T06:00:00',
+    actionRequired: false,
+    remediation: 'Consider gating Blink account activation on hire date rather than Workday record creation date. Short-term: review whether pre-hire access to Paystub and Schedule is intentional policy or an oversight.',
+  },
+  {
+    id: 'sa009',
+    severity: 'high',
+    type: 'prestart_access',
+    title: 'Pre-hire nurse has PHI access 15 days before start date',
+    message:
+      'Jennifer Walsh (HCA Healthcare, Nursing — Oncology) is in pre-hire status with a start date of May 12. Her account was provisioned Apr 20 and verified Apr 21. She has active deep links to Patient Records, patient scheduling, and medication administration records — all PHI systems — 15 days before employment is formally active and while her background check is still pending. HIPAA §164.308(a)(4) requires covered entities to implement policies ensuring workforce members access only PHI they are authorized to use.',
+    affectedEmployeeIds: ['e014'],
+    customerId: 'hca',
+    customerName: 'HCA Healthcare',
+    timestamp: '2026-04-27T06:00:00',
+    actionRequired: true,
+    remediation: 'Suspend PHI-connected app access immediately pending background check clearance and formal start date. For healthcare customers, enforce a hard gate: PHI app deep links must not activate until hire date is reached and background check status is confirmed clear.',
+  },
+]
+
+export const metricsData: Record<string, Metrics> = {
+  walmart: {
+    avgTimeToAccess: 2.4,
+    day1ActivationRate: 87,
+    selfServiceRecoveryRate: 73,
+    provisioningSuccessRate: 94,
+    activeEmployees: 5200,
+    newHiresThisWeek: 47,
+    deepLinks: [
+      { name: 'Paystub', successRate: 94.2, totalAttempts: 12840, trend: 'stable' },
+      { name: 'Schedule', successRate: 98.7, totalAttempts: 31200, trend: 'up' },
+      { name: 'Benefits', successRate: 91.3, totalAttempts: 8920, trend: 'down', failureReason: 'SSO audience mismatch' },
+      { name: 'Directory', successRate: 99.1, totalAttempts: 18600, trend: 'stable' },
+      { name: 'Time & Attendance', successRate: 97.4, totalAttempts: 22100, trend: 'stable' },
+    ],
+    weeklyTrend: [
+      { day: 'Mon', activations: 12, failures: 1, avgHours: 2.8 },
+      { day: 'Tue', activations: 9, failures: 0, avgHours: 2.1 },
+      { day: 'Wed', activations: 14, failures: 2, avgHours: 3.2 },
+      { day: 'Thu', activations: 7, failures: 1, avgHours: 2.4 },
+      { day: 'Fri', activations: 5, failures: 0, avgHours: 1.9 },
+      { day: 'Mon', activations: 11, failures: 1, avgHours: 2.6 },
+      { day: 'Tue', activations: 8, failures: 2, avgHours: 2.4 },
+    ],
+  },
+  hca: {
+    avgTimeToAccess: 3.1,
+    day1ActivationRate: 79,
+    selfServiceRecoveryRate: 61,
+    provisioningSuccessRate: 88,
+    activeEmployees: 1800,
+    newHiresThisWeek: 18,
+    deepLinks: [
+      { name: 'Paystub', successRate: 97.1, totalAttempts: 4200, trend: 'stable' },
+      { name: 'Schedule', successRate: 95.4, totalAttempts: 6100, trend: 'stable' },
+      { name: 'Benefits', successRate: 93.8, totalAttempts: 2800, trend: 'stable' },
+      { name: 'Patient Records', successRate: 99.4, totalAttempts: 11200, trend: 'up' },
+      { name: 'Time & Attendance', successRate: 96.2, totalAttempts: 5400, trend: 'stable' },
+    ],
+    weeklyTrend: [
+      { day: 'Mon', activations: 4, failures: 1, avgHours: 3.4 },
+      { day: 'Tue', activations: 3, failures: 0, avgHours: 2.9 },
+      { day: 'Wed', activations: 5, failures: 1, avgHours: 3.1 },
+      { day: 'Thu', activations: 3, failures: 1, avgHours: 3.8 },
+      { day: 'Fri', activations: 2, failures: 0, avgHours: 2.7 },
+      { day: 'Mon', activations: 4, failures: 2, avgHours: 3.2 },
+      { day: 'Tue', activations: 2, failures: 1, avgHours: 3.1 },
+    ],
+  },
+  target: {
+    avgTimeToAccess: 2.1,
+    day1ActivationRate: 92,
+    selfServiceRecoveryRate: 81,
+    provisioningSuccessRate: 97,
+    activeEmployees: 3100,
+    newHiresThisWeek: 31,
+    deepLinks: [
+      { name: 'Paystub', successRate: 98.1, totalAttempts: 7900, trend: 'stable' },
+      { name: 'Schedule', successRate: 99.2, totalAttempts: 14800, trend: 'up' },
+      { name: 'Benefits', successRate: 96.4, totalAttempts: 4100, trend: 'stable' },
+      { name: 'Directory', successRate: 98.7, totalAttempts: 9200, trend: 'stable' },
+      { name: 'Time & Attendance', successRate: 98.9, totalAttempts: 11400, trend: 'stable' },
+    ],
+    weeklyTrend: [
+      { day: 'Mon', activations: 8, failures: 0, avgHours: 2.2 },
+      { day: 'Tue', activations: 6, failures: 1, avgHours: 2.0 },
+      { day: 'Wed', activations: 9, failures: 0, avgHours: 2.1 },
+      { day: 'Thu', activations: 5, failures: 0, avgHours: 1.9 },
+      { day: 'Fri', activations: 3, failures: 0, avgHours: 2.3 },
+      { day: 'Mon', activations: 7, failures: 0, avgHours: 2.1 },
+      { day: 'Tue', activations: 4, failures: 0, avgHours: 2.0 },
+    ],
+  },
+}
