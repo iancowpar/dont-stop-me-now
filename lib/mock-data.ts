@@ -16,7 +16,7 @@ export const customers: Customer[] = [
     industry: 'Healthcare',
     employeeCount: 1800,
     scimTokenExpiry: '2026-06-30',
-    integrationHealth: 74,
+    integrationHealth: 68,
     csm: 'Priya Mehta',
   },
   {
@@ -231,7 +231,7 @@ export const employees: Employee[] = [
   {
     id: 'e009',
     name: 'Casey Morgan',
-    department: 'Administration',
+    department: 'Clinical Administration',
     hireDate: '2026-04-14',
     customerId: 'hca',
     customerName: 'HCA Healthcare',
@@ -243,7 +243,7 @@ export const employees: Employee[] = [
     blinkSessionActive: true,
     riskLevel: 'high',
     timeToAccess: 2.7,
-    notes: 'TERMINATED Apr 25. Workday sent SCIM deprovision event at 09:12 — failed to process (malformed payload, missing required attribute). Session remains active. Patient schedule and admin data accessible. HIPAA compliance risk.',
+    notes: 'TERMINATED Apr 25. Workday sent SCIM deprovision event at 09:12 — failed to process (malformed payload, missing required attribute). HCA is on hourly scheduled polling, not RTS — the failed event has not been retried across 48+ polling cycles. Session remains active. Deep links to patient scheduling, medication administration records, and clinical staff directory remain accessible. HIPAA Security Rule §164.308(a)(3)(ii)(C) requires covered entities to terminate access when employment ends.',
   },
 
   // ── Target Corp employees ──────────────────────────────────────────────────
@@ -315,16 +315,16 @@ export const securityAlerts: SecurityAlert[] = [
     id: 'sa002',
     severity: 'high',
     type: 'deprovisioning_lag',
-    title: 'SCIM deprovision failed — terminated employee, HIPAA risk',
+    title: 'SCIM deprovision failed — PHI accessible post-termination (HIPAA §164.308)',
     message:
-      'Casey Morgan (HCA Healthcare) was terminated Apr 25. Workday sent a SCIM deprovision event at 09:12 but it failed to process — malformed payload, missing required attribute. The event was not retried. Blink session remains active 2 days later. Patient scheduling and admin records accessible. Potential HIPAA violation.',
+      'Casey Morgan (HCA Healthcare, Clinical Administration) was terminated Apr 25. Workday sent a SCIM deprovision event at 09:12 but it failed — malformed payload, missing required attribute. HCA is on hourly scheduled polling, not Real-Time Sync. The failed event has not been retried across 48+ polling cycles. Active Blink session gives access to patient scheduling, medication administration records, and clinical staff directory. HIPAA Security Rule §164.308(a)(3)(ii)(C) requires covered entities to terminate workforce access when employment ends. If PHI was accessed post-termination, HCA may have a breach notification obligation under §164.400.',
     affectedEmployeeIds: ['e009'],
     customerId: 'hca',
     customerName: 'HCA Healthcare',
     timestamp: '2026-04-25T09:15:00',
     actionRequired: true,
     remediation:
-      'Force-revoke session immediately. Replay the failed SCIM deprovision event. Pull full post-termination access audit log and notify HCA compliance team. Fix malformed payload — likely a Workday field mapping issue introduced in a recent config change.',
+      'Force-revoke session immediately. Pull full post-termination access audit log — if PHI was accessed, HCA compliance and legal must be notified within 60 days per §164.412. Fix malformed SCIM payload (likely a Workday field mapping regression) and replay deprovision event. Recommend upgrading HCA to Real-Time Sync for termination events to eliminate the hourly polling gap.',
   },
   {
     id: 'sa003',
