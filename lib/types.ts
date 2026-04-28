@@ -25,6 +25,8 @@ export type Employee = {
   notes?: string
 }
 
+export type PipelineFilter = 'all' | 'today' | 'pending' | 'at-risk' | 'terminated' | 'pre-hire'
+
 export type AlertSeverity = 'high' | 'medium' | 'low'
 export type AlertType =
   | 'deprovisioning_lag'

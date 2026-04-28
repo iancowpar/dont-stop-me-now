@@ -13,7 +13,7 @@ import {
   Clock,
   Loader2,
 } from 'lucide-react'
-import type { Employee, ProvisioningStatus, ActionHandlers } from '@/lib/types'
+import type { Employee, ProvisioningStatus, ActionHandlers, PipelineFilter } from '@/lib/types'
 
 // ── Pipeline stage dot ────────────────────────────────────────────────────────
 
@@ -79,13 +79,11 @@ const STATUS_LABELS: Record<Employee['status'], string> = {
 
 // ── Filter bar ────────────────────────────────────────────────────────────────
 
-type Filter = 'all' | 'today' | 'pending' | 'at-risk' | 'terminated' | 'pre-hire'
-
 const TODAY = '2026-04-27'
 
 const isPreHire = (emp: Employee) => emp.hireDate > TODAY && emp.status === 'active'
 
-function matchesFilter(emp: Employee, f: Filter): boolean {
+function matchesFilter(emp: Employee, f: PipelineFilter): boolean {
   if (f === 'all') return true
   if (f === 'today') return emp.hireDate === TODAY
   if (f === 'pending') return emp.status === 'pending'
@@ -97,12 +95,21 @@ function matchesFilter(emp: Employee, f: Filter): boolean {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export default function ProvisioningPipeline({ employees, handlers }: { employees: Employee[]; handlers: ActionHandlers }) {
-  const [filter, setFilter] = useState<Filter>('all')
+export default function ProvisioningPipeline({
+  employees,
+  handlers,
+  filter,
+  onFilterChange,
+}: {
+  employees: Employee[]
+  handlers: ActionHandlers
+  filter: PipelineFilter
+  onFilterChange: (f: PipelineFilter) => void
+}) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const { revokeSession, retryProvision, sendVerificationSms, loadingActions } = handlers
 
-  const filterDefs: { id: Filter; label: string }[] = [
+  const filterDefs: { id: PipelineFilter; label: string }[] = [
     { id: 'all', label: 'All' },
     { id: 'today', label: "Today's Hires" },
     { id: 'pre-hire', label: 'Pre-Hire' },
@@ -123,7 +130,7 @@ export default function ProvisioningPipeline({ employees, handlers }: { employee
           return (
             <button
               key={f.id}
-              onClick={() => setFilter(f.id)}
+              onClick={() => onFilterChange(f.id)}
               className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 active
                   ? 'bg-blue-600 text-white shadow-sm'

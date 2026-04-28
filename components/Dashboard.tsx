@@ -7,11 +7,12 @@ import ProvisioningPipeline from './ProvisioningPipeline'
 import SecurityGuardrails from './SecurityGuardrails'
 import ZeroFrictionMetrics from './ZeroFrictionMetrics'
 import AuditLog from './AuditLog'
+import RiskSummary from './RiskSummary'
 import Toast from './Toast'
 import ConfirmDialog from './ConfirmDialog'
 import { customers, employees as initialEmployees, securityAlerts as initialAlerts, metricsData } from '@/lib/mock-data'
 import { simulateApiCall, generateId } from '@/lib/actions'
-import type { Employee, SecurityAlert, AuditEntry, ToastMessage, ConfirmConfig, ActionHandlers } from '@/lib/types'
+import type { Employee, SecurityAlert, AuditEntry, ToastMessage, ConfirmConfig, ActionHandlers, PipelineFilter } from '@/lib/types'
 
 type Tab = 'pipeline' | 'security' | 'metrics' | 'audit'
 
@@ -25,6 +26,7 @@ const TABS: { id: Tab; label: string }[] = [
 export default function Dashboard() {
   const [customerId, setCustomerId] = useState('walmart')
   const [tab, setTab] = useState<Tab>('pipeline')
+  const [pipelineFilter, setPipelineFilter] = useState<PipelineFilter>('all')
 
   // Mutable data state — actions update these directly
   const [allEmployees, setAllEmployees] = useState<Employee[]>(initialEmployees)
@@ -220,6 +222,13 @@ export default function Dashboard() {
     showToast('info', 'Alert dismissed.')
   }, [allAlerts, customer.csm, addAudit, showToast])
 
+  // ── Navigation helper ─────────────────────────────────────────────────────
+
+  const goTo = useCallback((tab: 'pipeline' | 'security', filter?: PipelineFilter) => {
+    setTab(tab)
+    if (filter !== undefined) setPipelineFilter(filter)
+  }, [])
+
   // ── Handlers bundle ───────────────────────────────────────────────────────
 
   const handlers: ActionHandlers = {
@@ -247,7 +256,7 @@ export default function Dashboard() {
       <Header
         customers={customers}
         selectedCustomerId={customerId}
-        onCustomerChange={(id) => { setCustomerId(id); setTab('pipeline') }}
+        onCustomerChange={(id) => { setCustomerId(id); setTab('pipeline'); setPipelineFilter('all') }}
         alertCount={actionableAlertCount}
         highAlertCount={highAlertCount}
       />
@@ -257,6 +266,12 @@ export default function Dashboard() {
           metrics={metrics}
           alertCount={actionableAlertCount}
           highAlertCount={highAlertCount}
+        />
+
+        <RiskSummary
+          customerEmployees={customerEmployees}
+          customerAlerts={customerAlerts}
+          onGoTo={goTo}
         />
 
         {/* Tab nav */}
@@ -298,7 +313,7 @@ export default function Dashboard() {
         </div>
 
         {/* Tab content */}
-        {tab === 'pipeline' && <ProvisioningPipeline employees={customerEmployees} handlers={handlers} />}
+        {tab === 'pipeline' && <ProvisioningPipeline employees={customerEmployees} handlers={handlers} filter={pipelineFilter} onFilterChange={setPipelineFilter} />}
         {tab === 'security' && <SecurityGuardrails alerts={customerAlerts} handlers={handlers} />}
         {tab === 'metrics' && <ZeroFrictionMetrics metrics={metrics} />}
         {tab === 'audit' && <AuditLog entries={auditEntries} />}
