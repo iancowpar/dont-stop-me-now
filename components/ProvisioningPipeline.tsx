@@ -79,9 +79,11 @@ const STATUS_LABELS: Record<Employee['status'], string> = {
 
 // ── Filter bar ────────────────────────────────────────────────────────────────
 
-type Filter = 'all' | 'today' | 'pending' | 'at-risk' | 'terminated'
+type Filter = 'all' | 'today' | 'pending' | 'at-risk' | 'terminated' | 'pre-hire'
 
 const TODAY = '2026-04-27'
+
+const isPreHire = (emp: Employee) => emp.hireDate > TODAY && emp.status === 'active'
 
 function matchesFilter(emp: Employee, f: Filter): boolean {
   if (f === 'all') return true
@@ -89,6 +91,7 @@ function matchesFilter(emp: Employee, f: Filter): boolean {
   if (f === 'pending') return emp.status === 'pending'
   if (f === 'at-risk') return emp.riskLevel === 'high' || emp.riskLevel === 'medium'
   if (f === 'terminated') return emp.status === 'terminated'
+  if (f === 'pre-hire') return isPreHire(emp)
   return true
 }
 
@@ -102,6 +105,7 @@ export default function ProvisioningPipeline({ employees, handlers }: { employee
   const filterDefs: { id: Filter; label: string }[] = [
     { id: 'all', label: 'All' },
     { id: 'today', label: "Today's Hires" },
+    { id: 'pre-hire', label: 'Pre-Hire' },
     { id: 'pending', label: 'Pending' },
     { id: 'at-risk', label: 'At Risk' },
     { id: 'terminated', label: 'Terminated' },
@@ -197,10 +201,16 @@ export default function ProvisioningPipeline({ employees, handlers }: { employee
 
                 {/* Status */}
                 <div className="flex justify-center">
-                  <span className={`px-2.5 py-0.5 text-xs rounded-full ${STATUS_STYLES[emp.status]}`}>
-                    {emp.status === 'terminated' ? '⚠ ' : ''}
-                    {STATUS_LABELS[emp.status]}
-                  </span>
+                  {isPreHire(emp) ? (
+                    <span className="px-2.5 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-medium">
+                      Pre-Hire
+                    </span>
+                  ) : (
+                    <span className={`px-2.5 py-0.5 text-xs rounded-full ${STATUS_STYLES[emp.status]}`}>
+                      {emp.status === 'terminated' ? '⚠ ' : ''}
+                      {STATUS_LABELS[emp.status]}
+                    </span>
+                  )}
                 </div>
 
                 {/* Time to access */}
@@ -269,6 +279,40 @@ export default function ProvisioningPipeline({ employees, handlers }: { employee
                     >
                       <span className="font-semibold">Note: </span>
                       {emp.notes}
+                    </div>
+                  )}
+
+                  {/* Downstream session gap — shown for all terminated employees */}
+                  {emp.status === 'terminated' && (
+                    <div className={`mt-3 rounded-lg border px-3 py-2.5 text-xs flex items-start gap-2 ${
+                      emp.downstreamSessionsCleared
+                        ? 'bg-green-50 border-green-200 text-green-800'
+                        : 'bg-amber-50 border-amber-200 text-amber-800'
+                    }`}>
+                      {emp.downstreamSessionsCleared
+                        ? <CheckCircle2 className="w-3.5 h-3.5 text-green-500 mt-0.5 shrink-0" />
+                        : <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
+                      }
+                      <div>
+                        <span className="font-semibold">Downstream app sessions: </span>
+                        {emp.downstreamSessionsCleared
+                          ? 'Confirmed cleared.'
+                          : emp.blinkSessionActive
+                          ? 'At risk — active Blink session means all connected app sessions (Paystub, Schedule, Benefits) are live. Revoking Blink does not automatically terminate downstream sessions. App vendors must be contacted separately to force-expire tokens.'
+                          : 'Unconfirmed — Blink session revoked, but connected app sessions (Paystub, Schedule, Benefits) may persist until their tokens expire naturally. Blink has no back-channel to force downstream session termination.'
+                        }
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pre-hire access warning */}
+                  {isPreHire(emp) && (
+                    <div className="mt-3 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2.5 text-xs flex items-start gap-2 text-purple-800">
+                      <AlertTriangle className="w-3.5 h-3.5 text-purple-500 mt-0.5 shrink-0" />
+                      <div>
+                        <span className="font-semibold">Pre-hire access: </span>
+                        This employee is in pre-hire status — start date is {emp.hireDate}. Their Blink account was provisioned when the Workday record was created, not on their start date. Access is live now.
+                      </div>
                     </div>
                   )}
 

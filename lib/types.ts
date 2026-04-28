@@ -21,6 +21,7 @@ export type Employee = {
   timeToAccess?: number
   terminatedDate?: string
   blinkSessionActive?: boolean
+  downstreamSessionsCleared?: boolean
   notes?: string
 }
 
@@ -31,6 +32,8 @@ export type AlertType =
   | 'identity_unverified'
   | 'deep_link_failure'
   | 'provisioning_delay'
+  | 'phone_recycling_risk'
+  | 'prestart_access'
 
 export type SecurityAlert = {
   id: string

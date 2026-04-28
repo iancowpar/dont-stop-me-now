@@ -10,6 +10,8 @@ import {
   AlertTriangle,
   Info,
   Loader2,
+  Smartphone,
+  CalendarClock,
 } from 'lucide-react'
 import type { SecurityAlert, AlertSeverity, AlertType, ActionHandlers } from '@/lib/types'
 
@@ -46,6 +48,8 @@ const TYPE_ICONS: Record<AlertType, React.ReactNode> = {
   identity_unverified: <UserCheck className="w-5 h-5" />,
   deep_link_failure: <Link2Off className="w-5 h-5" />,
   provisioning_delay: <Clock className="w-5 h-5" />,
+  phone_recycling_risk: <Smartphone className="w-5 h-5" />,
+  prestart_access: <CalendarClock className="w-5 h-5" />,
 }
 
 const TYPE_LABELS: Record<AlertType, string> = {
@@ -54,6 +58,8 @@ const TYPE_LABELS: Record<AlertType, string> = {
   identity_unverified: 'Unverified Identity',
   deep_link_failure: 'Deep Link Failure',
   provisioning_delay: 'Provisioning Delay',
+  phone_recycling_risk: 'Phone Recycling Risk',
+  prestart_access: 'Pre-Hire Access',
 }
 
 function formatTimestamp(ts: string): string {
@@ -131,9 +137,12 @@ function AlertCard({ alert, handlers }: { alert: SecurityAlert; handlers: Action
                 }`}
               >
                 {isLoading && <Loader2 className="w-3 h-3 animate-spin" />}
-                {alert.type === 'deprovisioning_lag'
-                  ? (isLoading ? 'Revoking…' : 'Revoke Session')
-                  : (isLoading ? 'Resolving…' : 'Take Action')}
+                {isLoading ? 'Working…' :
+                  alert.type === 'deprovisioning_lag' ? 'Revoke Session' :
+                  alert.type === 'phone_recycling_risk' ? 'Purge Identity' :
+                  alert.type === 'prestart_access' ? 'Suspend PHI Access' :
+                  'Take Action'
+                }
               </button>
               <button className="px-3.5 py-1.5 text-xs font-medium bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors">
                 View Details

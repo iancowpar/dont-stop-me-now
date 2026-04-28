@@ -106,7 +106,7 @@ export default function Dashboard() {
           result: 'success',
           details: 'Blink session terminated. SCIM deprovision event confirmed.',
         })
-        showToast('success', `Session revoked for ${emp.name}. Access terminated.`)
+        showToast('info', `Session revoked for ${emp.name}. Note: downstream app sessions (Paystub, Schedule, Benefits) may persist until their tokens expire — Blink has no back-channel to force-terminate them.`)
         setLoading(employeeId, null)
       },
     })
