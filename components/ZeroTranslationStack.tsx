@@ -1,15 +1,9 @@
-import {
-  FolderOpen,
-  FileText,
-  Map,
-  Users,
-  MessageCircle,
-  Sparkles,
-  Code2,
-  CheckCircle2,
-  Hand,
-} from 'lucide-react'
 import styles from './ZeroTranslationStack.module.css'
+import {
+  LayerOneVignette,
+  LayerTwoVignette,
+  LayerThreeVignette,
+} from './ZeroTranslationVignettes'
 
 export default function ZeroTranslationStack() {
   return (
@@ -104,17 +98,7 @@ export default function ZeroTranslationStack() {
             <div className={`${styles.funnel} ${styles.f3}`}>
               <div className={styles.funnelShape} />
               <div className={styles.funnelInner}>
-                <div className={styles.funnelIcons}>
-                  <span className={styles.iconBadge}>
-                    <Hand size={20} strokeWidth={1.75} />
-                  </span>
-                  <span className={styles.iconBadge}>
-                    <Code2 size={20} strokeWidth={1.75} />
-                  </span>
-                  <span className={styles.iconBadge}>
-                    <CheckCircle2 size={20} strokeWidth={1.75} />
-                  </span>
-                </div>
+                <LayerThreeVignette className={styles.funnelArt} />
                 <div className={styles.funnelNum}>3</div>
               </div>
             </div>
@@ -124,17 +108,7 @@ export default function ZeroTranslationStack() {
             <div className={`${styles.funnel} ${styles.f2}`}>
               <div className={styles.funnelShape} />
               <div className={styles.funnelInner}>
-                <div className={styles.funnelIcons}>
-                  <span className={styles.iconBadge}>
-                    <Users size={20} strokeWidth={1.75} />
-                  </span>
-                  <span className={styles.iconBadge}>
-                    <MessageCircle size={20} strokeWidth={1.75} />
-                  </span>
-                  <span className={styles.iconBadge}>
-                    <Sparkles size={20} strokeWidth={1.75} />
-                  </span>
-                </div>
+                <LayerTwoVignette className={styles.funnelArt} />
                 <div className={styles.funnelNum}>2</div>
               </div>
             </div>
@@ -144,17 +118,7 @@ export default function ZeroTranslationStack() {
             <div className={`${styles.funnel} ${styles.f1}`}>
               <div className={styles.funnelShape} />
               <div className={styles.funnelInner}>
-                <div className={styles.funnelIcons}>
-                  <span className={styles.iconBadge}>
-                    <FolderOpen size={22} strokeWidth={1.75} />
-                  </span>
-                  <span className={styles.iconBadge}>
-                    <FileText size={20} strokeWidth={1.75} />
-                  </span>
-                  <span className={styles.iconBadge}>
-                    <Map size={20} strokeWidth={1.75} />
-                  </span>
-                </div>
+                <LayerOneVignette className={styles.funnelArt} />
                 <div className={styles.funnelNum}>1</div>
               </div>
             </div>
