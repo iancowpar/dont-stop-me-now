@@ -1,0 +1,333 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 24px;
+  background: #E9E1CE;
+}
+
+.poster {
+  --cream: #F4EEDC;
+  --cream-2: #EDE3CA;
+  --ink: #0F2A5E;
+  --ink-2: #1F3B7A;
+  --ink-3: #3B4A66;
+  --muted: #5C6885;
+  --rule: #C9BFA6;
+  --accent: #5B7FE8;
+  --layer-1: #2A55C2;
+  --layer-2: #466FD6;
+  --layer-3: #ECE0BE;
+  --serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --mono: var(--font-jbmono), "JetBrains Mono", ui-monospace, monospace;
+  --sans: var(--font-inter), "Inter", -apple-system, system-ui, sans-serif;
+
+  width: 1280px;
+  background: var(--cream);
+  color: var(--ink-2);
+  font-family: var(--sans);
+  padding: 40px 48px 36px;
+  position: relative;
+  border-radius: 18px;
+  box-shadow: 0 30px 90px rgba(31, 59, 122, 0.18), 0 0 0 1px rgba(15, 42, 94, 0.06);
+  overflow: hidden;
+}
+
+/* ─── Topbar ─── */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 999px;
+}
+.chipDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5BD0A4;
+  display: inline-block;
+}
+.authors {
+  display: inline-flex;
+  gap: 8px;
+}
+.authorChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 7px 12px 7px 7px;
+  border-radius: 999px;
+}
+.authorAvatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C8A96E, #5B7FE8);
+  flex-shrink: 0;
+}
+
+/* ─── Title ─── */
+.title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 4px 0 28px;
+  max-width: 980px;
+}
+.titleHighlight {
+  color: var(--accent);
+}
+
+/* ─── Layout ─── */
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr 220px;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+/* ─── Left column ─── */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 8px;
+}
+.layerDesc h3 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.layerSub {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+}
+.layerDesc hr {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 0 0 14px;
+}
+.bullets {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  margin: 0;
+}
+.bullets b {
+  font-weight: 700;
+  color: var(--ink);
+}
+.bullets p {
+  margin: 0 0 8px;
+}
+.bullets p:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── Compression Lens Stack ─── */
+.lensStack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 4px 0 8px;
+}
+
+.lens {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lensShape {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.l1 { width: 540px; height: 116px; }
+.l2 { width: 460px; height: 108px; }
+.l3 { width: 380px; height: 100px; }
+
+.lensInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 14% 0 12%;
+}
+.l3 .lensInner {
+  padding: 0 12% 0 11%;
+}
+
+.lensArt {
+  width: 180px;
+  height: 80px;
+  flex-shrink: 0;
+  color: rgba(244, 238, 220, 0.95);
+}
+.l3 .lensArt {
+  color: var(--ink);
+}
+
+.lensNum {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 96px;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  -webkit-text-stroke: 2px rgba(244, 238, 220, 0.9);
+  color: transparent;
+}
+.l3 .lensNum {
+  -webkit-text-stroke: 2px var(--ink);
+}
+
+/* converging compression beams between optical elements */
+.compressionRays {
+  display: block;
+  margin: -3px 0;
+  color: var(--ink);
+}
+
+/* radiant focal point above the top lens — emergent fidelity */
+.focalPoint {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin-bottom: 6px;
+  color: var(--accent);
+}
+
+/* ─── Right column (annotations) ─── */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 6px 0 6px 12px;
+  border-left: 1px solid var(--rule);
+}
+.annotation {
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+.annotation strong {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.annotation p {
+  margin: 0;
+}
+
+/* ─── Fidelity row ─── */
+.fidelity {
+  border: 1px dashed var(--rule);
+  border-radius: 12px;
+  padding: 22px 28px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+  align-items: center;
+  margin-bottom: 22px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.fidelitySmall {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.fidelityWord {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+.fidelityBody {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  margin: 0;
+}
+.fidelityBody em {
+  font-style: italic;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ─── Footer ─── */
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.urlChip {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 7px 14px;
+  border-radius: 999px;
+  letter-spacing: 0.14em;
+}

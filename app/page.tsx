@@ -1,5 +1,5 @@
-import Dashboard from '@/components/Dashboard'
+import ZeroTranslationStack from '@/components/ZeroTranslationStack'
 
 export default function Home() {
-  return <Dashboard />
+  return <ZeroTranslationStack />
 }
