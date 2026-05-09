@@ -220,11 +220,23 @@
   pointer-events: none;
 }
 .f1 .funnelArt {
-  left: -8px;
-  top: 30px;
-  width: 320px;
+  left: -10px;
+  top: 28px;
+  width: 220px;
   height: 140px;
   color: var(--cream);
+}
+
+.routingCard {
+  position: absolute;
+  width: 132px;
+  height: 166px;
+  right: -32px;
+  top: 44px;
+  transform: rotate(7deg);
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(4px 6px 10px rgba(15, 42, 94, 0.32));
 }
 .f2 .funnelArt {
   left: 50%;
@@ -257,8 +269,10 @@
   pointer-events: none;
 }
 .f1 .funnelNum {
-  right: 14%;
+  left: 50%;
   top: 14px;
+  transform: translateX(-50%);
+  font-size: 168px;
 }
 .f2 .funnelNum {
   left: 50%;

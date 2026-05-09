@@ -4,15 +4,14 @@ type VignetteProps = SVGProps<SVGSVGElement>
 
 /**
  * Layer 1 — Shared Foundation.
- * A folder fanning out via tree-connector lines to a stack of files, plus a
- * tilted CLAUDE.md routing card on the right with a small compass marker.
- * Drawn at 320×140 with thicker strokes for thumbnail legibility; the routing
- * card is positioned near the right edge so it can hang off the funnel.
+ * A folder fanning out via tree-connector lines to a stack of files. The
+ * routing card lives in {@link RoutingCard} so it can be positioned outside
+ * the bucket's right edge.
  */
 export function LayerOneVignette(props: VignetteProps) {
   return (
     <svg
-      viewBox="0 0 320 140"
+      viewBox="0 0 220 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -54,29 +53,71 @@ export function LayerOneVignette(props: VignetteProps) {
         <line x1="154" y1="100" x2="186" y2="100" />
         <line x1="154" y1="106" x2="174" y2="106" />
       </g>
+    </svg>
+  )
+}
 
-      <g transform="translate(214 18) rotate(6)">
-        <rect
-          x="0"
-          y="0"
-          width="84"
-          height="104"
-          rx="5"
-          fill="currentColor"
-          fillOpacity={0.28}
-          stroke="currentColor"
-          strokeWidth={2.2}
-        />
-        <line x1="10" y1="18" x2="74" y2="18" stroke="currentColor" strokeWidth={1.8} />
-        <line x1="10" y1="28" x2="62" y2="28" stroke="currentColor" strokeWidth={1.8} />
-        <line x1="10" y1="38" x2="68" y2="38" stroke="currentColor" strokeWidth={1.8} />
-        <circle cx="42" cy="68" r="14" fill="none" stroke="currentColor" strokeWidth={2.2} />
-        <path
-          d="M 42 56 L 47 68 L 42 80 L 37 68 Z"
-          fill="currentColor"
-          fillOpacity={0.7}
-        />
-      </g>
+/**
+ * The CLAUDE.md routing card — a paper-style card with a labeled header, a
+ * subtitle, body lines, and a compass/star marker. Designed to sit on top of
+ * (and overhang) the Layer 1 funnel so it reads as a separate artifact.
+ */
+export function RoutingCard(props: VignetteProps) {
+  return (
+    <svg
+      viewBox="0 0 140 176"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect
+        x="2"
+        y="2"
+        width="136"
+        height="172"
+        rx="6"
+        fill="#F4EEDC"
+        stroke="#0F2A5E"
+        strokeWidth={2.4}
+      />
+      <rect x="14" y="14" width="86" height="14" rx="3" fill="#0F2A5E" />
+      <text
+        x="57"
+        y="24.5"
+        textAnchor="middle"
+        fontFamily="JetBrains Mono, monospace"
+        fontSize={9}
+        fontWeight={700}
+        fill="#F4EEDC"
+        letterSpacing="0.08em"
+      >
+        CLAUDE.md
+      </text>
+      <text
+        x="70"
+        y="50"
+        textAnchor="middle"
+        fontFamily="Cormorant Garamond, Georgia, serif"
+        fontSize={15}
+        fontWeight={600}
+        fontStyle="italic"
+        fill="#0F2A5E"
+      >
+        Routing Table
+      </text>
+      <line x1="14" y1="62" x2="126" y2="62" stroke="#0F2A5E" strokeOpacity={0.4} strokeWidth={1.2} />
+      <line x1="14" y1="70" x2="108" y2="70" stroke="#0F2A5E" strokeOpacity={0.4} strokeWidth={1.2} />
+      <line x1="14" y1="78" x2="120" y2="78" stroke="#0F2A5E" strokeOpacity={0.4} strokeWidth={1.2} />
+      <circle cx="70" cy="118" r="22" fill="none" stroke="#0F2A5E" strokeWidth={2.2} />
+      <path
+        d="M 70 100 L 78 118 L 70 136 L 62 118 Z"
+        fill="#0F2A5E"
+        fillOpacity={0.85}
+      />
+      <circle cx="70" cy="118" r="2.4" fill="#F4EEDC" />
+      <line x1="14" y1="156" x2="92" y2="156" stroke="#0F2A5E" strokeOpacity={0.35} strokeWidth={1.2} />
+      <line x1="14" y1="164" x2="68" y2="164" stroke="#0F2A5E" strokeOpacity={0.35} strokeWidth={1.2} />
     </svg>
   )
 }

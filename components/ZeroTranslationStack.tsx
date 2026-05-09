@@ -3,6 +3,7 @@ import {
   LayerOneVignette,
   LayerTwoVignette,
   LayerThreeVignette,
+  RoutingCard,
 } from './ZeroTranslationVignettes'
 import { Funnel, UpArrow } from './ZeroTranslationFunnel'
 
@@ -166,6 +167,7 @@ export default function ZeroTranslationStack() {
                 <LayerOneVignette className={styles.funnelArt} />
                 <div className={styles.funnelNum}>1</div>
               </div>
+              <RoutingCard className={styles.routingCard} />
             </div>
           </div>
 
