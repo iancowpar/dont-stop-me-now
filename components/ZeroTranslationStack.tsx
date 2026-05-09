@@ -4,12 +4,12 @@ import {
   LayerTwoVignette,
   LayerThreeVignette,
 } from './ZeroTranslationVignettes'
-import { Lens, CompressionRays } from './ZeroTranslationLens'
+import { Funnel, UpArrow } from './ZeroTranslationFunnel'
 
-const LENS_SIZES = {
-  l1: { width: 540, height: 116 },
-  l2: { width: 460, height: 108 },
-  l3: { width: 380, height: 100 },
+const SIZES = {
+  f1: { width: 600, height: 200 },
+  f2: { width: 540, height: 188 },
+  f3: { width: 480, height: 178 },
 } as const
 
 export default function ZeroTranslationStack() {
@@ -37,141 +37,141 @@ export default function ZeroTranslationStack() {
         </h1>
 
         <div className={styles.layout}>
-          <div className={styles.leftCol}>
-            <section className={styles.layerDesc}>
-              <h3>
-                Layer 3:
-                <br />
-                Shared Standards
-              </h3>
-              <p className={styles.layerSub}>how the system earns trust over time</p>
-              <hr />
-              <div className={styles.bullets}>
-                <p>
-                  <b>Explicit quality norms:</b> the team can name what good
-                  sounds like and correct it when it drifts.
-                </p>
-                <p>
-                  <b>Encoded learnings:</b> feedback flows back into Layer 1, so
-                  the system gets smarter as it&rsquo;s used.
-                </p>
-                <p>
-                  <b>Adoption discipline:</b> no new capability rolls out until
-                  shared context is updated.
-                </p>
-              </div>
-            </section>
-
-            <section className={styles.layerDesc}>
-              <h3>Layer 2: Shared Language</h3>
-              <p className={styles.layerSub}>how the team asks questions</p>
-              <hr />
-              <div className={styles.bullets}>
-                <p>
-                  <b>Shared prompt patterns:</b> not power users hoarding
-                  techniques — frameworks the whole team writes from.
-                </p>
-                <p>
-                  <b>Common vocabulary:</b> the team can say &ldquo;this sounds
-                  generated&rdquo; and everyone knows what that means.
-                </p>
-                <p>
-                  <b>Peer learning loops:</b> output is handed off, not hoarded.
-                </p>
-              </div>
-            </section>
-
-            <section className={styles.layerDesc}>
-              <h3>Layer 1: Shared Foundation</h3>
-              <p className={styles.layerSub}>what feeds the system</p>
-              <hr />
-              <div className={styles.bullets}>
-                <p>
-                  <b>Institutional memory:</b> project knowledge, constraints,
-                  decisions — the context that survives turnover.
-                </p>
-                <p>
-                  <b>The team&rsquo;s voice, preserved:</b> not a folder of
-                  files. A trust document everyone writes from.
-                </p>
-                <p>
-                  <b>Zero cold starts:</b> no prompt begins from zero again.
-                </p>
-              </div>
-            </section>
-          </div>
-
-          <div className={styles.lensStack}>
-            <div className={`${styles.lens} ${styles.l3}`}>
-              <Lens
-                id="lensGrad3"
-                width={LENS_SIZES.l3.width}
-                height={LENS_SIZES.l3.height}
-                variant="cream"
-                className={styles.lensShape}
-              />
-              <div className={styles.lensInner}>
-                <LayerThreeVignette className={styles.lensArt} />
-                <div className={styles.lensNum}>3</div>
-              </div>
-            </div>
-
-            <CompressionRays
-              lowerSpan={LENS_SIZES.l2.width}
-              upperSpan={LENS_SIZES.l3.width}
-              className={styles.compressionRays}
-            />
-
-            <div className={`${styles.lens} ${styles.l2}`}>
-              <Lens
-                id="lensGrad2"
-                width={LENS_SIZES.l2.width}
-                height={LENS_SIZES.l2.height}
-                variant="mid"
-                className={styles.lensShape}
-              />
-              <div className={styles.lensInner}>
-                <LayerTwoVignette className={styles.lensArt} />
-                <div className={styles.lensNum}>2</div>
-              </div>
-            </div>
-
-            <CompressionRays
-              lowerSpan={LENS_SIZES.l1.width}
-              upperSpan={LENS_SIZES.l2.width}
-              className={styles.compressionRays}
-            />
-
-            <div className={`${styles.lens} ${styles.l1}`}>
-              <Lens
-                id="lensGrad1"
-                width={LENS_SIZES.l1.width}
-                height={LENS_SIZES.l1.height}
-                variant="deep"
-                className={styles.lensShape}
-              />
-              <div className={styles.lensInner}>
-                <LayerOneVignette className={styles.lensArt} />
-                <div className={styles.lensNum}>1</div>
-              </div>
-            </div>
-          </div>
-
-          <aside className={styles.rightCol}>
-            <div className={styles.annotation}>
-              <strong>Month 3</strong>
-              <p>institutional signal that compounds instead of cancels.</p>
-            </div>
-            <div className={styles.annotation}>
-              <strong>Month 1</strong>
+          {/* ── Row 3 (top): Shared Standards ── */}
+          <section className={`${styles.layerDesc} ${styles.desc3}`}>
+            <h3>Layer 3: Shared Standards</h3>
+            <p className={styles.layerSub}>how the system earns trust over time</p>
+            <hr />
+            <div className={styles.bullets}>
               <p>
-                team language emerges — shared signal replaces individual noise.
+                <b>Explicit quality norms:</b> the team can name what good sounds
+                like and correct it when it drifts.
+              </p>
+              <p>
+                <b>Encoded learnings:</b> feedback flows back into Layer 1, so
+                the system gets smarter as it&rsquo;s used.
+              </p>
+              <p>
+                <b>Adoption discipline:</b> no new capability rolls out until
+                shared context is updated.
               </p>
             </div>
-            <div className={styles.annotation}>
-              <strong>Week 1</strong>
-              <p>10 files. The repo everyone writes to.</p>
+          </section>
+
+          <div className={styles.funnelCell3}>
+            <div className={`${styles.funnel} ${styles.f3}`}>
+              <Funnel
+                width={SIZES.f3.width}
+                height={SIZES.f3.height}
+                variant="cream"
+                className={styles.funnelShape}
+              />
+              <div className={styles.funnelInner}>
+                <LayerThreeVignette className={styles.funnelArt} />
+                <div className={styles.funnelNum}>3</div>
+              </div>
             </div>
+          </div>
+
+          <aside className={`${styles.annotation} ${styles.ann3}`}>
+            <strong>Month 3</strong>
+            <p>institutional signal that compounds instead of cancels.</p>
+          </aside>
+
+          {/* ── arrow row: 3 ↑ 2 ── */}
+          <div className={`${styles.arrowCell} ${styles.arrow32}`}>
+            <UpArrow size={42} />
+          </div>
+          <div className={`${styles.tlCell} ${styles.tl32}`}>
+            <span className={styles.tlShaft} />
+          </div>
+
+          {/* ── Row 2: Shared Language ── */}
+          <section className={`${styles.layerDesc} ${styles.desc2}`}>
+            <h3>Layer 2: Shared Language</h3>
+            <p className={styles.layerSub}>how the team asks questions</p>
+            <hr />
+            <div className={styles.bullets}>
+              <p>
+                <b>Shared prompt patterns:</b> not power users hoarding
+                techniques — frameworks the whole team writes from.
+              </p>
+              <p>
+                <b>Common vocabulary:</b> the team can say &ldquo;this sounds
+                generated&rdquo; and everyone knows what that means.
+              </p>
+              <p>
+                <b>Peer learning loops:</b> output is handed off, not hoarded.
+              </p>
+            </div>
+          </section>
+
+          <div className={styles.funnelCell2}>
+            <div className={`${styles.funnel} ${styles.f2}`}>
+              <Funnel
+                width={SIZES.f2.width}
+                height={SIZES.f2.height}
+                variant="mid"
+                className={styles.funnelShape}
+              />
+              <div className={styles.funnelInner}>
+                <LayerTwoVignette className={styles.funnelArt} />
+                <div className={styles.funnelNum}>2</div>
+              </div>
+            </div>
+          </div>
+
+          <aside className={`${styles.annotation} ${styles.ann2}`}>
+            <strong>Month 1</strong>
+            <p>team language emerges — shared signal replaces individual noise.</p>
+          </aside>
+
+          {/* ── arrow row: 2 ↑ 1 ── */}
+          <div className={`${styles.arrowCell} ${styles.arrow21}`}>
+            <UpArrow size={42} />
+          </div>
+          <div className={`${styles.tlCell} ${styles.tl21}`}>
+            <span className={styles.tlShaft} />
+          </div>
+
+          {/* ── Row 1 (bottom): Shared Foundation ── */}
+          <section className={`${styles.layerDesc} ${styles.desc1}`}>
+            <h3>Layer 1: Shared Foundation</h3>
+            <p className={styles.layerSub}>what feeds the system</p>
+            <hr />
+            <div className={styles.bullets}>
+              <p>
+                <b>Institutional memory:</b> project knowledge, constraints,
+                decisions — the context that survives turnover.
+              </p>
+              <p>
+                <b>The team&rsquo;s voice, preserved:</b> not a folder of files.
+                A trust document everyone writes from.
+              </p>
+              <p>
+                <b>Zero cold starts:</b> no prompt begins from zero again.
+              </p>
+            </div>
+          </section>
+
+          <div className={styles.funnelCell1}>
+            <div className={`${styles.funnel} ${styles.f1}`}>
+              <Funnel
+                width={SIZES.f1.width}
+                height={SIZES.f1.height}
+                variant="deep"
+                className={styles.funnelShape}
+              />
+              <div className={styles.funnelInner}>
+                <LayerOneVignette className={styles.funnelArt} />
+                <div className={styles.funnelNum}>1</div>
+              </div>
+            </div>
+          </div>
+
+          <aside className={`${styles.annotation} ${styles.ann1}`}>
+            <strong>Week 1</strong>
+            <p>10 files. The repo everyone writes to.</p>
           </aside>
         </div>
 

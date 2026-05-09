@@ -3,13 +3,16 @@ import type { SVGProps } from 'react'
 type VignetteProps = SVGProps<SVGSVGElement>
 
 /**
- * Layer 1 — Shared Foundation
- * A folder branching to a stack of files, plus a tilted "routing" card with a compass.
+ * Layer 1 — Shared Foundation.
+ * A folder fanning out via tree-connector lines to a stack of files, plus a
+ * tilted CLAUDE.md routing card on the right with a small compass marker.
+ * Drawn at 320×140 with thicker strokes for thumbnail legibility; the routing
+ * card is positioned near the right edge so it can hang off the funnel.
  */
 export function LayerOneVignette(props: VignetteProps) {
   return (
     <svg
-      viewBox="0 0 180 80"
+      viewBox="0 0 320 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -17,97 +20,59 @@ export function LayerOneVignette(props: VignetteProps) {
     >
       <g
         stroke="currentColor"
-        strokeWidth={1.5}
+        strokeWidth={2.4}
         strokeLinejoin="round"
         strokeLinecap="round"
       >
         <path
-          d="M6 22 V16 Q6 12 10 12 H22 L28 18 H46 Q50 18 50 22 V60 Q50 64 46 64 H10 Q6 64 6 60 Z"
+          d="M 8 38 V 26 Q 8 18 16 18 H 40 L 52 30 H 90 Q 98 30 98 38 V 110 Q 98 118 90 118 H 16 Q 8 118 8 110 Z"
           fill="currentColor"
           fillOpacity={0.18}
         />
-        <path d="M6 26 H50" />
+        <path d="M 8 46 H 98" />
       </g>
 
       <path
-        d="M50 38 H64 M64 22 V58 M64 22 H80 M64 38 H80 M64 54 H80"
+        d="M 98 70 H 122 M 122 38 V 102 M 122 38 H 146 M 122 70 H 146 M 122 102 H 146"
         stroke="currentColor"
-        strokeWidth={1.25}
+        strokeWidth={2}
         strokeLinecap="round"
         fill="none"
       />
 
-      <g
-        stroke="currentColor"
-        strokeWidth={1.25}
-        fill="currentColor"
-        fillOpacity={0.16}
-      >
-        <rect x="80" y="14" width="28" height="16" rx="2" />
-        <rect x="80" y="32" width="28" height="16" rx="2" />
-        <rect x="80" y="50" width="28" height="16" rx="2" />
+      <g stroke="currentColor" strokeWidth={2} fill="currentColor" fillOpacity={0.22}>
+        <rect x="146" y="26" width="48" height="26" rx="3" />
+        <rect x="146" y="58" width="48" height="26" rx="3" />
+        <rect x="146" y="90" width="48" height="26" rx="3" />
       </g>
 
-      <g
-        stroke="currentColor"
-        strokeWidth={1}
-        strokeLinecap="round"
-        opacity={0.85}
-      >
-        <line x1="84" y1="20" x2="104" y2="20" />
-        <line x1="84" y1="24" x2="100" y2="24" />
-        <line x1="84" y1="38" x2="104" y2="38" />
-        <line x1="84" y1="42" x2="98" y2="42" />
-        <line x1="84" y1="56" x2="104" y2="56" />
-        <line x1="84" y1="60" x2="96" y2="60" />
+      <g stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" opacity={0.85}>
+        <line x1="154" y1="36" x2="186" y2="36" />
+        <line x1="154" y1="42" x2="178" y2="42" />
+        <line x1="154" y1="68" x2="186" y2="68" />
+        <line x1="154" y1="74" x2="180" y2="74" />
+        <line x1="154" y1="100" x2="186" y2="100" />
+        <line x1="154" y1="106" x2="174" y2="106" />
       </g>
 
-      <g transform="translate(122 12) rotate(5)">
+      <g transform="translate(214 18) rotate(6)">
         <rect
           x="0"
           y="0"
-          width="44"
-          height="54"
-          rx="3"
+          width="84"
+          height="104"
+          rx="5"
           fill="currentColor"
-          fillOpacity={0.22}
+          fillOpacity={0.28}
           stroke="currentColor"
-          strokeWidth={1.4}
+          strokeWidth={2.2}
         />
-        <line
-          x1="6"
-          y1="10"
-          x2="38"
-          y2="10"
-          stroke="currentColor"
-          strokeWidth={1.2}
-        />
-        <line
-          x1="6"
-          y1="16"
-          x2="32"
-          y2="16"
-          stroke="currentColor"
-          strokeWidth={1.2}
-        />
-        <line
-          x1="6"
-          y1="22"
-          x2="35"
-          y2="22"
-          stroke="currentColor"
-          strokeWidth={1.2}
-        />
-        <circle
-          cx="22"
-          cy="38"
-          r="7"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.4}
-        />
+        <line x1="10" y1="18" x2="74" y2="18" stroke="currentColor" strokeWidth={1.8} />
+        <line x1="10" y1="28" x2="62" y2="28" stroke="currentColor" strokeWidth={1.8} />
+        <line x1="10" y1="38" x2="68" y2="38" stroke="currentColor" strokeWidth={1.8} />
+        <circle cx="42" cy="68" r="14" fill="none" stroke="currentColor" strokeWidth={2.2} />
         <path
-          d="M22 33 L25 38 L22 43 L19 38 Z"
+          d="M 42 56 L 47 68 L 42 80 L 37 68 Z"
           fill="currentColor"
           fillOpacity={0.7}
         />
@@ -117,13 +82,14 @@ export function LayerOneVignette(props: VignetteProps) {
 }
 
 /**
- * Layer 2 — Shared Language
- * Two figures facing each other, each with an "AI" speech bubble, joined by a handoff arrow.
+ * Layer 2 — Shared Language.
+ * Two figures (head + shoulders) facing each other, each carrying an "AI"
+ * speech bubble; a double-headed handoff arrow runs between them. 320×140.
  */
 export function LayerTwoVignette(props: VignetteProps) {
   return (
     <svg
-      viewBox="0 0 180 80"
+      viewBox="0 0 320 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -131,28 +97,28 @@ export function LayerTwoVignette(props: VignetteProps) {
     >
       <g
         stroke="currentColor"
-        strokeWidth={1.5}
+        strokeWidth={2.2}
         strokeLinejoin="round"
         strokeLinecap="round"
       >
-        <circle cx="22" cy="48" r="9" fill="currentColor" fillOpacity={0.2} />
+        <circle cx="40" cy="86" r="16" fill="currentColor" fillOpacity={0.25} />
         <path
-          d="M8 74 Q8 60 22 60 Q36 60 36 74"
+          d="M 14 134 Q 14 110 40 110 Q 66 110 66 134"
           fill="currentColor"
-          fillOpacity={0.2}
+          fillOpacity={0.25}
         />
         <path
-          d="M6 8 H34 Q38 8 38 12 V24 Q38 28 34 28 H22 L18 34 V28 H10 Q6 28 6 24 Z"
+          d="M 8 8 H 64 Q 72 8 72 16 V 38 Q 72 46 64 46 H 44 L 36 56 V 46 H 16 Q 8 46 8 38 V 16 Q 8 8 16 8 Z"
           fill="currentColor"
-          fillOpacity={0.28}
+          fillOpacity={0.32}
         />
       </g>
       <text
-        x="22"
-        y="22"
+        x="40"
+        y="34"
         textAnchor="middle"
-        fontFamily="var(--font-jbmono), monospace"
-        fontSize={10}
+        fontFamily="JetBrains Mono, monospace"
+        fontSize={16}
         fontWeight={700}
         fill="currentColor"
       >
@@ -161,40 +127,40 @@ export function LayerTwoVignette(props: VignetteProps) {
 
       <g
         stroke="currentColor"
-        strokeWidth={1.6}
+        strokeWidth={2.4}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
       >
-        <path d="M50 44 H 130" />
-        <path d="M54 40 L 50 44 L 54 48" />
-        <path d="M126 40 L 130 44 L 126 48" />
+        <path d="M 88 80 H 232" />
+        <path d="M 96 72 L 88 80 L 96 88" />
+        <path d="M 224 72 L 232 80 L 224 88" />
       </g>
 
       <g
         stroke="currentColor"
-        strokeWidth={1.5}
+        strokeWidth={2.2}
         strokeLinejoin="round"
         strokeLinecap="round"
       >
-        <circle cx="158" cy="48" r="9" fill="currentColor" fillOpacity={0.2} />
+        <circle cx="280" cy="86" r="16" fill="currentColor" fillOpacity={0.25} />
         <path
-          d="M144 74 Q144 60 158 60 Q172 60 172 74"
+          d="M 254 134 Q 254 110 280 110 Q 306 110 306 134"
           fill="currentColor"
-          fillOpacity={0.2}
+          fillOpacity={0.25}
         />
         <path
-          d="M146 8 H174 Q178 8 178 12 V24 Q178 28 174 28 H166 L162 34 V28 H146 Q142 28 142 24 V12 Q142 8 146 8 Z"
+          d="M 256 8 H 312 Q 320 8 320 16 V 38 Q 320 46 312 46 H 292 L 284 56 V 46 H 264 Q 256 46 256 38 V 16 Q 256 8 264 8 Z"
           fill="currentColor"
-          fillOpacity={0.28}
+          fillOpacity={0.32}
         />
       </g>
       <text
-        x="160"
-        y="22"
+        x="288"
+        y="34"
         textAnchor="middle"
-        fontFamily="var(--font-jbmono), monospace"
-        fontSize={10}
+        fontFamily="JetBrains Mono, monospace"
+        fontSize={16}
         fontWeight={700}
         fill="currentColor"
       >
@@ -205,13 +171,14 @@ export function LayerTwoVignette(props: VignetteProps) {
 }
 
 /**
- * Layer 3 — Shared Standards
- * Open hand → fist (discipline) and a code window with a verifying checkmark badge.
+ * Layer 3 — Shared Standards.
+ * An open hand transitioning to a fist (discipline), beside a code window with
+ * a green verifying checkmark badge. 320×140.
  */
 export function LayerThreeVignette(props: VignetteProps) {
   return (
     <svg
-      viewBox="0 0 180 80"
+      viewBox="0 0 320 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -219,96 +186,89 @@ export function LayerThreeVignette(props: VignetteProps) {
     >
       <g
         stroke="currentColor"
-        strokeWidth={1.4}
+        strokeWidth={2.2}
         strokeLinejoin="round"
         strokeLinecap="round"
         fill="currentColor"
-        fillOpacity={0.18}
+        fillOpacity={0.2}
       >
         <path
-          d="M6 50 V36 Q6 32 10 32 Q14 32 14 36 V46
-             M14 36 V28 Q14 24 18 24 Q22 24 22 28 V46
-             M22 30 V22 Q22 18 26 18 Q30 18 30 22 V46
-             M30 28 V32 Q30 28 34 28 Q38 28 38 32 V52
-             Q38 64 26 68 H18 Q8 68 6 56 Z"
+          d="M 8 92 V 60 Q 8 52 16 52 Q 24 52 24 60 V 80
+             M 24 60 V 44 Q 24 36 32 36 Q 40 36 40 44 V 80
+             M 40 48 V 32 Q 40 24 48 24 Q 56 24 56 32 V 80
+             M 56 44 V 50 Q 56 42 64 42 Q 72 42 72 50 V 92
+             Q 72 118 48 124 H 32 Q 14 124 8 108 Z"
         />
       </g>
 
       <g
         stroke="currentColor"
-        strokeWidth={1.5}
+        strokeWidth={2.4}
         strokeLinecap="round"
         fill="none"
       >
-        <path d="M48 44 H 68" />
-        <path d="M64 40 L 68 44 L 64 48" />
+        <path d="M 88 78 H 124" />
+        <path d="M 116 70 L 124 78 L 116 86" />
       </g>
 
       <g
         stroke="currentColor"
-        strokeWidth={1.4}
+        strokeWidth={2.2}
         strokeLinejoin="round"
         strokeLinecap="round"
       >
         <path
-          d="M76 38 Q76 28 90 28 Q104 28 104 38 V54 Q104 66 90 70 H82 Q72 70 72 60 Z"
+          d="M 138 64 Q 138 46 168 46 Q 198 46 198 64 V 96 Q 198 120 170 124 H 152 Q 130 124 130 104 Z"
           fill="currentColor"
-          fillOpacity={0.24}
+          fillOpacity={0.26}
         />
         <path
-          d="M82 36 H 100 M82 44 H 100 M82 52 H 100 M82 60 H 100"
+          d="M 148 64 H 188 M 148 78 H 188 M 148 92 H 188 M 148 106 H 188"
           stroke="currentColor"
-          strokeOpacity={0.45}
-          strokeWidth={1}
+          strokeOpacity={0.5}
+          strokeWidth={1.5}
         />
       </g>
 
-      <g transform="translate(116 12)">
+      <g transform="translate(220 22)">
         <rect
           x="0"
           y="0"
-          width="56"
-          height="44"
-          rx="3"
+          width="92"
+          height="74"
+          rx="4"
           fill="currentColor"
-          fillOpacity={0.18}
+          fillOpacity={0.2}
           stroke="currentColor"
-          strokeWidth={1.4}
+          strokeWidth={2.2}
         />
-        <line
-          x1="0"
-          y1="11"
-          x2="56"
-          y2="11"
-          stroke="currentColor"
-          strokeWidth={1.2}
-        />
-        <circle cx="6" cy="5.5" r="1.4" fill="currentColor" />
-        <circle cx="11" cy="5.5" r="1.4" fill="currentColor" />
-        <circle cx="16" cy="5.5" r="1.4" fill="currentColor" />
+        <line x1="0" y1="18" x2="92" y2="18" stroke="currentColor" strokeWidth={1.8} />
+        <circle cx="10" cy="9" r="2.2" fill="currentColor" />
+        <circle cx="18" cy="9" r="2.2" fill="currentColor" />
+        <circle cx="26" cy="9" r="2.2" fill="currentColor" />
         <text
-          x="28"
-          y="32"
+          x="46"
+          y="54"
           textAnchor="middle"
-          fontFamily="var(--font-jbmono), monospace"
-          fontSize={13}
+          fontFamily="JetBrains Mono, monospace"
+          fontSize={22}
           fontWeight={700}
           fill="currentColor"
         >
           {'</>'}
         </text>
         <circle
-          cx="52"
-          cy="42"
-          r="9"
+          cx="86"
+          cy="72"
+          r="14"
           fill="#5BD0A4"
           stroke="currentColor"
-          strokeWidth={1.4}
+          strokeWidth={2.2}
         />
         <path
-          d="M48 42 L 51 45 L 56 39"
+          d="M 79 72 L 84 77 L 92 67"
           stroke="#0F2A5E"
-          strokeWidth={1.8}
+          strokeWidth={2.6}
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
