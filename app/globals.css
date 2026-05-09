@@ -6,13 +6,13 @@
   * {
     box-sizing: border-box;
   }
+  html,
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
-  }
-}
-
-@layer utilities {
-  .pipeline-line {
-    @apply h-0.5 w-6;
+    margin: 0;
+    padding: 0;
+    background: #E9E1CE;
+    color: #0F2A5E;
+    font-family: var(--font-inter), -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
