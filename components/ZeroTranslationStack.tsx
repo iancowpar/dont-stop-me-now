@@ -4,6 +4,13 @@ import {
   LayerTwoVignette,
   LayerThreeVignette,
 } from './ZeroTranslationVignettes'
+import { Lens, CompressionRays } from './ZeroTranslationLens'
+
+const LENS_SIZES = {
+  l1: { width: 540, height: 116 },
+  l2: { width: 460, height: 108 },
+  l3: { width: 380, height: 100 },
+} as const
 
 export default function ZeroTranslationStack() {
   return (
@@ -94,32 +101,58 @@ export default function ZeroTranslationStack() {
             </section>
           </div>
 
-          <div className={styles.funnels}>
-            <div className={`${styles.funnel} ${styles.f3}`}>
-              <div className={styles.funnelShape} />
-              <div className={styles.funnelInner}>
-                <LayerThreeVignette className={styles.funnelArt} />
-                <div className={styles.funnelNum}>3</div>
+          <div className={styles.lensStack}>
+            <div className={`${styles.lens} ${styles.l3}`}>
+              <Lens
+                id="lensGrad3"
+                width={LENS_SIZES.l3.width}
+                height={LENS_SIZES.l3.height}
+                variant="cream"
+                className={styles.lensShape}
+              />
+              <div className={styles.lensInner}>
+                <LayerThreeVignette className={styles.lensArt} />
+                <div className={styles.lensNum}>3</div>
               </div>
             </div>
 
-            <div className={styles.connector} />
+            <CompressionRays
+              lowerSpan={LENS_SIZES.l2.width}
+              upperSpan={LENS_SIZES.l3.width}
+              className={styles.compressionRays}
+            />
 
-            <div className={`${styles.funnel} ${styles.f2}`}>
-              <div className={styles.funnelShape} />
-              <div className={styles.funnelInner}>
-                <LayerTwoVignette className={styles.funnelArt} />
-                <div className={styles.funnelNum}>2</div>
+            <div className={`${styles.lens} ${styles.l2}`}>
+              <Lens
+                id="lensGrad2"
+                width={LENS_SIZES.l2.width}
+                height={LENS_SIZES.l2.height}
+                variant="mid"
+                className={styles.lensShape}
+              />
+              <div className={styles.lensInner}>
+                <LayerTwoVignette className={styles.lensArt} />
+                <div className={styles.lensNum}>2</div>
               </div>
             </div>
 
-            <div className={styles.connector} />
+            <CompressionRays
+              lowerSpan={LENS_SIZES.l1.width}
+              upperSpan={LENS_SIZES.l2.width}
+              className={styles.compressionRays}
+            />
 
-            <div className={`${styles.funnel} ${styles.f1}`}>
-              <div className={styles.funnelShape} />
-              <div className={styles.funnelInner}>
-                <LayerOneVignette className={styles.funnelArt} />
-                <div className={styles.funnelNum}>1</div>
+            <div className={`${styles.lens} ${styles.l1}`}>
+              <Lens
+                id="lensGrad1"
+                width={LENS_SIZES.l1.width}
+                height={LENS_SIZES.l1.height}
+                variant="deep"
+                className={styles.lensShape}
+              />
+              <div className={styles.lensInner}>
+                <LayerOneVignette className={styles.lensArt} />
+                <div className={styles.lensNum}>1</div>
               </div>
             </div>
           </div>

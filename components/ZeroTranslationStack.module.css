@@ -159,83 +159,84 @@
   margin-bottom: 0;
 }
 
-/* ─── Funnels ─── */
-.funnels {
+/* ─── Compression Lens Stack ─── */
+.lensStack {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 0;
   padding: 4px 0 8px;
 }
 
-.funnel {
+.lens {
   position: relative;
-  height: 144px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.funnelShape {
+.lensShape {
   position: absolute;
   inset: 0;
-  clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%);
+  z-index: 0;
+  pointer-events: none;
 }
 
-.f1 { width: 520px; }
-.f2 { width: 440px; }
-.f3 { width: 360px; }
+.l1 { width: 540px; height: 116px; }
+.l2 { width: 460px; height: 108px; }
+.l3 { width: 380px; height: 100px; }
 
-.f1 .funnelShape { background: var(--layer-1); }
-.f2 .funnelShape { background: var(--layer-2); }
-.f3 .funnelShape { background: var(--layer-3); }
-
-.funnelInner {
+.lensInner {
   position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0 36px 0 28px;
-  z-index: 1;
+  padding: 0 14% 0 12%;
 }
-.f3 .funnelInner {
-  padding: 0 32px 0 24px;
+.l3 .lensInner {
+  padding: 0 12% 0 11%;
 }
 
-.funnelArt {
+.lensArt {
   width: 180px;
   height: 80px;
   flex-shrink: 0;
   color: rgba(244, 238, 220, 0.95);
 }
-.f3 .funnelArt {
+.l3 .lensArt {
   color: var(--ink);
 }
 
-.funnelNum {
+.lensNum {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 100px;
+  font-size: 96px;
   line-height: 0.9;
   letter-spacing: -0.02em;
   -webkit-text-stroke: 2px rgba(244, 238, 220, 0.9);
   color: transparent;
 }
-.f3 .funnelNum {
+.l3 .lensNum {
   -webkit-text-stroke: 2px var(--ink);
 }
 
-/* connecting up-arrows between layers */
-.connector {
-  width: 0;
-  height: 0;
-  border-left: 14px solid transparent;
-  border-right: 14px solid transparent;
-  border-bottom: 18px solid var(--ink);
-  margin: -2px 0;
-  opacity: 0.85;
+/* converging compression beams between optical elements */
+.compressionRays {
+  display: block;
+  margin: -3px 0;
+  color: var(--ink);
+}
+
+/* radiant focal point above the top lens — emergent fidelity */
+.focalPoint {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin-bottom: 6px;
+  color: var(--accent);
 }
 
 /* ─── Right column (annotations) ─── */
