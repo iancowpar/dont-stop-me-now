@@ -213,13 +213,14 @@ export function LayerTwoVignette(props: VignetteProps) {
 
 /**
  * Layer 3 — Shared Standards.
- * An open hand transitioning to a fist (discipline), beside a code window with
- * a green verifying checkmark badge. 320×140.
+ * An open hand transitioning to a fist (discipline). The code window with its
+ * verifying checkmark badge lives in {@link CodeCheckCard} so it can be
+ * positioned independently on the right side of the funnel.
  */
 export function LayerThreeVignette(props: VignetteProps) {
   return (
     <svg
-      viewBox="0 0 320 140"
+      viewBox="0 0 210 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -270,51 +271,74 @@ export function LayerThreeVignette(props: VignetteProps) {
           strokeWidth={1.5}
         />
       </g>
+    </svg>
+  )
+}
 
-      <g transform="translate(220 22)">
-        <rect
-          x="0"
-          y="0"
-          width="92"
-          height="74"
-          rx="4"
-          fill="currentColor"
-          fillOpacity={0.2}
-          stroke="currentColor"
-          strokeWidth={2.2}
-        />
-        <line x1="0" y1="18" x2="92" y2="18" stroke="currentColor" strokeWidth={1.8} />
-        <circle cx="10" cy="9" r="2.2" fill="currentColor" />
-        <circle cx="18" cy="9" r="2.2" fill="currentColor" />
-        <circle cx="26" cy="9" r="2.2" fill="currentColor" />
-        <text
-          x="46"
-          y="54"
-          textAnchor="middle"
-          fontFamily="JetBrains Mono, monospace"
-          fontSize={22}
-          fontWeight={700}
-          fill="currentColor"
-        >
-          {'</>'}
-        </text>
-        <circle
-          cx="86"
-          cy="72"
-          r="14"
-          fill="#5BD0A4"
-          stroke="currentColor"
-          strokeWidth={2.2}
-        />
-        <path
-          d="M 79 72 L 84 77 L 92 67"
-          stroke="#0F2A5E"
-          strokeWidth={2.6}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      </g>
+/**
+ * Companion artifact for Layer 3 — a code window (with the traffic-light
+ * dots and `</>` glyph) and a green checkmark badge in the corner. Sits on
+ * the right side of the Standards funnel; counterpart to the RoutingCard on
+ * Layer 1.
+ */
+export function CodeCheckCard(props: VignetteProps) {
+  return (
+    <svg
+      viewBox="0 0 110 102"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect
+        x="2"
+        y="2"
+        width="98"
+        height="80"
+        rx="4"
+        fill="currentColor"
+        fillOpacity={0.2}
+        stroke="currentColor"
+        strokeWidth={2.2}
+      />
+      <line
+        x1="2"
+        y1="22"
+        x2="100"
+        y2="22"
+        stroke="currentColor"
+        strokeWidth={1.8}
+      />
+      <circle cx="12" cy="12" r="2.4" fill="currentColor" />
+      <circle cx="22" cy="12" r="2.4" fill="currentColor" />
+      <circle cx="32" cy="12" r="2.4" fill="currentColor" />
+      <text
+        x="51"
+        y="60"
+        textAnchor="middle"
+        fontFamily="JetBrains Mono, monospace"
+        fontSize={24}
+        fontWeight={700}
+        fill="currentColor"
+      >
+        {'</>'}
+      </text>
+      <circle
+        cx="92"
+        cy="84"
+        r="16"
+        fill="#5BD0A4"
+        stroke="currentColor"
+        strokeWidth={2.2}
+      />
+      <path
+        d="M 84 84 L 90 90 L 100 78"
+        stroke="#0F2A5E"
+        strokeWidth={2.8}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
     </svg>
   )
 }

@@ -247,10 +247,21 @@
   color: var(--cream);
 }
 .f3 .funnelArt {
-  left: -4px;
-  top: 20px;
-  width: 320px;
-  height: 140px;
+  left: 4px;
+  top: 24px;
+  width: 200px;
+  height: 134px;
+  color: var(--ink);
+}
+
+.codeCheckCard {
+  position: absolute;
+  width: 110px;
+  height: 102px;
+  right: 24px;
+  top: 38px;
+  z-index: 4;
+  pointer-events: none;
   color: var(--ink);
 }
 
@@ -281,8 +292,10 @@
   font-size: 150px;
 }
 .f3 .funnelNum {
-  right: 11%;
+  left: 50%;
   top: 12px;
+  transform: translateX(-50%);
+  font-size: 168px;
   color: transparent;
   -webkit-text-stroke: 4px var(--ink);
   text-shadow: none;
