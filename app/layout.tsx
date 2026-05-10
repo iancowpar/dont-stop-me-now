@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
-import { Cormorant_Garamond, JetBrains_Mono, Inter } from 'next/font/google'
+import {
+  Cormorant_Garamond,
+  JetBrains_Mono,
+  Inter,
+  Playfair_Display,
+} from 'next/font/google'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -7,6 +12,13 @@ const cormorant = Cormorant_Garamond({
   weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
   variable: '--font-cormorant',
+  display: 'swap',
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['600', '700', '800'],
+  variable: '--font-playfair',
   display: 'swap',
 })
 
@@ -38,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${jbMono.variable} ${inter.variable}`}
+      className={`${cormorant.variable} ${jbMono.variable} ${inter.variable} ${playfair.variable}`}
     >
       <body>{children}</body>
     </html>
